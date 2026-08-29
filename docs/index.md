@@ -17,6 +17,7 @@ This project brings together computational biology concepts with AI and engineer
 ## Quick links
 
 - [Getting Started](getting-started.md)
+- [Project Plan](plan.html)
 
 ## Local documentation
 
