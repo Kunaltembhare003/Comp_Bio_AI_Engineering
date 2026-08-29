@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GenAI → Bioinformatics :: Progress Tracker</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700;800&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #0A1412;
+    --surface: #10201C;
+    --surface-2: #162923;
+    --border: #223A32;
+    --text: #E8F0EC;
+    --muted: #7E9690;
+    --muted-2: #587067;
+    --m1: #2FD9A6;
+    --m2: #46B6E0;
+    --m3: #E0B646;
+    --m4: #E0673F;
+    --m5: #F2C94C;
+    --eng: #8AA6FF;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{
+    background:
+      radial-gradient(ellipse 900px 500px at 15% -10%, rgba(47,217,166,0.08), transparent),
+      radial-gradient(ellipse 900px 600px at 100% 10%, rgba(224,103,63,0.06), transparent),
+      var(--bg);
+    color:var(--text);
+    font-family:'IBM Plex Sans', sans-serif;
+    line-height:1.5;
+    padding: 40px 20px 100px;
+    min-height:100vh;
+  }
+  .wrap{max-width: 920px; margin:0 auto;}
+
+  /* ---------- Header ---------- */
+  .eyebrow{
+    font-family:'JetBrains Mono', monospace;
+    font-size:12px;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    color:var(--muted);
+    margin-bottom:10px;
+    display:flex; align-items:center; gap:10px;
+  }
+  .eyebrow::before{content:'';width:18px;height:1px;background:var(--muted-2);}
+  h1{
+    font-family:'JetBrains Mono', monospace;
+    font-weight:800;
+    font-size: clamp(26px, 4vw, 38px);
+    letter-spacing:-0.01em;
+    margin-bottom:8px;
+  }
+  .sub{color:var(--muted); font-size:15px; max-width:560px; margin-bottom:28px;}
+
+  /* ---------- Karyotype progress bar (signature element) ---------- */
+  .karyo-card{
+    background:var(--surface);
+    border:1px solid var(--border);
+    border-radius:14px;
+    padding:22px 24px 18px;
+    margin-bottom:34px;
+  }
+  .karyo-top{
+    display:flex; justify-content:space-between; align-items:baseline; margin-bottom:14px; flex-wrap:wrap; gap:8px;
+  }
+  .karyo-label{font-family:'JetBrains Mono', monospace; font-size:12px; letter-spacing:.1em; text-transform:uppercase; color:var(--muted);}
+  .karyo-pct{font-family:'JetBrains Mono', monospace; font-weight:700; font-size:22px;}
+  .karyo-track{
+    display:flex; gap:3px; height:34px; border-radius:6px; overflow:hidden;
+    background:var(--surface-2); padding:3px;
+  }
+  .karyo-seg{
+    flex:1; display:flex; gap:2px; position:relative;
+  }
+  .karyo-seg:not(:last-child){margin-right:6px;}
+  .karyo-seg::after{
+    content:''; position:absolute; right:-4px; top:-3px; bottom:-3px; width:2px;
+    background:var(--bg); z-index:2;
+  }
+  .karyo-seg:last-child::after{display:none;}
+  .band{
+    flex:1; border-radius:2px; background: var(--surface); border:1px solid var(--border);
+    transition: background .3s ease, border-color .3s ease, transform .15s ease;
+  }
+  .band.done{border-color:transparent;}
+  .karyo-legend{display:flex; gap:18px; margin-top:14px; flex-wrap:wrap;}
+  .legend-item{display:flex; align-items:center; gap:7px; font-family:'JetBrains Mono', monospace; font-size:11px; color:var(--muted);}
+  .legend-dot{width:9px; height:9px; border-radius:2px;}
+
+  /* ---------- Month chapter ---------- */
+  .month{
+    background:var(--surface);
+    border:1px solid var(--border);
+    border-radius:14px;
+    margin-bottom:18px;
+    overflow:hidden;
+  }
+  .month-head{
+    display:flex; align-items:center; gap:16px;
+    padding:20px 22px;
+    cursor:pointer;
+    user-select:none;
+    border-left: 4px solid var(--accent);
+  }
+  .month-num{
+    font-family:'JetBrains Mono', monospace; font-weight:800; font-size:26px; color:var(--accent);
+    min-width:34px;
+  }
+  .month-titles{flex:1;}
+  .month-titles .label{font-family:'JetBrains Mono', monospace; font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:var(--muted); margin-bottom:3px;}
+  .month-titles .name{font-weight:600; font-size:16.5px;}
+  .month-progress{
+    font-family:'JetBrains Mono', monospace; font-size:13px; color:var(--muted); min-width:56px; text-align:right;
+  }
+  .chevron{color:var(--muted); transition:transform .25s ease; flex-shrink:0;}
+  .month.open .chevron{transform:rotate(90deg);}
+
+  .month-body{
+    max-height:0; overflow:hidden; transition:max-height .35s ease;
+    border-top:1px solid transparent;
+  }
+  .month.open .month-body{border-top:1px solid var(--border);}
+  .month-body-inner{padding: 8px 22px 22px;}
+
+  .section-label{
+    font-family:'JetBrains Mono', monospace; font-size:11px; letter-spacing:.1em; text-transform:uppercase;
+    color:var(--accent); margin: 18px 0 10px;
+  }
+  .section-label:first-child{margin-top:16px;}
+
+  .row{
+    display:flex; align-items:flex-start; gap:12px;
+    padding:10px 12px;
+    border-radius:8px;
+    background:var(--surface-2);
+    border:1px solid var(--border);
+    margin-bottom:8px;
+    cursor:pointer;
+    transition:background .15s ease, border-color .15s ease;
+  }
+  .row:hover{border-color:var(--accent);}
+  .row.checked{background:transparent; opacity:.55;}
+  .box{
+    width:18px; height:18px; flex-shrink:0; margin-top:2px;
+    border-radius:4px; border:1.5px solid var(--muted-2);
+    display:flex; align-items:center; justify-content:center;
+    transition:all .15s ease;
+  }
+  .row.checked .box{background:var(--accent); border-color:var(--accent);}
+  .box svg{width:11px; height:11px; opacity:0; transition:opacity .1s ease;}
+  .row.checked .box svg{opacity:1;}
+  .row-text{flex:1;}
+  .row-title{font-weight:600; font-size:14px;}
+  .row.checked .row-title{text-decoration:line-through; text-decoration-color:var(--muted-2);}
+  .row-detail{color:var(--muted); font-size:13px; margin-top:2px;}
+  .week-tag{
+    font-family:'JetBrains Mono', monospace; font-size:11px; color:var(--accent);
+    background:rgba(255,255,255,0.04); padding:2px 6px; border-radius:4px; margin-right:6px;
+  }
+  .subtopics{
+    display:flex; flex-wrap:wrap; gap:6px; margin-top:8px; margin-left:30px;
+  }
+  .subtopic-chip{
+    font-size:12px; color:var(--text); background:rgba(255,255,255,0.05);
+    border:1px solid var(--border); padding:3px 9px; border-radius:20px;
+  }
+  .study-links{
+    margin-top:10px; margin-left:30px; padding-top:8px; border-top:1px dashed var(--border);
+  }
+  .study-links .k{
+    font-family:'JetBrains Mono', monospace; font-size:10.5px; letter-spacing:.08em; text-transform:uppercase;
+    color:var(--muted); display:flex; align-items:center; gap:5px; margin-bottom:6px;
+  }
+  .study-list{list-style:none; display:flex; flex-direction:column; gap:5px;}
+  .study-list li{font-size:13px; display:flex; gap:6px; align-items:baseline;}
+  .study-list a{
+    color:var(--accent); text-decoration:none; font-weight:500;
+    border-bottom:1px solid transparent;
+  }
+  .study-list a:hover{border-bottom-color:var(--accent);}
+  .study-list .plain{color:var(--text);}
+  .study-list .why{color:var(--muted); font-size:12.5px;}
+  .ext-icon{width:10px; height:10px; opacity:.6; flex-shrink:0;}
+  .week-block{margin-bottom:16px;}
+  .week-block:last-of-type{margin-bottom:4px;}
+
+  .project-card, .milestone-card{
+    background:var(--surface-2); border:1px dashed var(--border);
+    border-radius:10px; padding:14px 16px; margin-bottom:8px;
+  }
+  .project-card .k, .milestone-card .k{
+    font-family:'JetBrains Mono', monospace; font-size:11px; letter-spacing:.08em; text-transform:uppercase;
+    color:var(--accent); margin-bottom:6px; display:block;
+  }
+  .project-card p{font-size:14px; color:var(--text);}
+
+  .month.capstone{border-color: rgba(242,201,76,0.35); background: linear-gradient(180deg, rgba(242,201,76,0.05), var(--surface) 60%);}
+  .month.parallel{border-color: rgba(138,166,255,0.35); background: linear-gradient(180deg, rgba(138,166,255,0.06), var(--surface) 60%);}
+  .capstone-badge{
+    font-family:'JetBrains Mono', monospace; font-size:10px; letter-spacing:.1em; text-transform:uppercase;
+    color:#1A1508; background:var(--m5); padding:2px 8px; border-radius:20px; margin-left:8px; font-weight:700;
+    vertical-align:middle;
+  }
+  .parallel-badge{
+    font-family:'JetBrains Mono', monospace; font-size:10px; letter-spacing:.1em; text-transform:uppercase;
+    color:#0E1530; background:var(--eng); padding:2px 8px; border-radius:20px; margin-left:8px; font-weight:700;
+    vertical-align:middle;
+  }
+  .footer{
+    display:flex; justify-content:space-between; align-items:center; margin-top:26px;
+    flex-wrap:wrap; gap:10px;
+  }
+  .save-note{font-family:'JetBrains Mono', monospace; font-size:11.5px; color:var(--muted-2);}
+  .reset-btn{
+    font-family:'JetBrains Mono', monospace; font-size:12px; color:var(--muted);
+    background:transparent; border:1px solid var(--border); padding:8px 14px; border-radius:7px;
+    cursor:pointer; transition:all .15s ease;
+  }
+  .reset-btn:hover{border-color:var(--m4); color:var(--m4);}
+
+  @media (max-width:560px){
+    .month-head{padding:16px;}
+    .month-body-inner{padding:6px 16px 18px;}
+    .karyo-card{padding:18px;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="eyebrow">Learning Path Tracker</div>
+  <h1>GenAI Engineer → Bioinformatics</h1>
+  <p class="sub">A 4-month roadmap from transformers &amp; diffusion models to protein structure, genomic foundation models, and drug-discovery pipelines. Progress saves automatically.</p>
+
+  <div class="karyo-card">
+    <div class="karyo-top">
+      <span class="karyo-label">Overall Progress</span>
+      <span class="karyo-pct" id="overallPct">0%</span>
+    </div>
+    <div class="karyo-track" id="karyoTrack"></div>
+    <div class="karyo-legend">
+      <div class="legend-item"><span class="legend-dot" style="background:var(--eng)"></span>AI Engineering (parallel)</div>
+      <div class="legend-item"><span class="legend-dot" style="background:var(--m1)"></span>Month 1 · Foundations</div>
+      <div class="legend-item"><span class="legend-dot" style="background:var(--m2)"></span>Month 2 · Protein AI</div>
+      <div class="legend-item"><span class="legend-dot" style="background:var(--m3)"></span>Month 3 · Genomic FMs</div>
+      <div class="legend-item"><span class="legend-dot" style="background:var(--m4)"></span>Month 4 · Drug Discovery</div>
+      <div class="legend-item"><span class="legend-dot" style="background:var(--m5)"></span>Capstone Project</div>
+    </div>
+  </div>
+
+  <div id="months"></div>
+
+  <div class="footer">
+    <span class="save-note" id="saveNote">progress stored locally to this tracker</span>
+    <button class="reset-btn" id="resetBtn">Reset all progress</button>
+  </div>
+
+</div>
+
+<script>
+const DATA = [
+  {
+    id: 0, accent: 'var(--eng)', isParallel: true, unitLabel: 'Skill', title: 'AI Engineering for Bio Models',
+    tagline: 'Run this alongside Months 1–4 — the production skills that turn notebooks into deployed systems.',
+    weeks: [
+      {n:'A', focus:'Experiment Tracking & Reproducibility', detail:'Track every run and version your data/configs so results are re-creatable months later',
+        subtopics:['Experiment tracking (W&B/MLflow)','Config & seed management','Dataset versioning (DVC)','Environment version-locking'],
+        links:[
+          {label:'Weights & Biases — official documentation', url:'https://docs.wandb.ai/', why:'Experiment tracking, model registry, and evaluation tooling'},
+          {label:'MLflow — official documentation', url:'https://mlflow.org/docs/latest/index.html', why:'Open-source alternative for tracking + model registry'}
+        ]},
+      {n:'B', focus:'Efficient Fine-Tuning', detail:'Parameter-efficient fine-tuning so you can adapt large protein/genomic models without full retraining',
+        subtopics:['LoRA / QLoRA','PEFT (Parameter-Efficient Fine-Tuning)','Mixed-precision training','Gradient checkpointing under limited GPU memory'],
+        links:[
+          {label:'Hugging Face PEFT — official repo', url:'https://github.com/huggingface/peft', why:'Reference implementation of LoRA/QLoRA and other PEFT methods'},
+          {label:'Transformers × PEFT integration guide', url:'https://huggingface.co/docs/transformers/en/peft', why:'Attach LoRA adapters directly to a Transformers model'}
+        ]},
+      {n:'C', focus:'Model Serving & Inference Optimization', detail:'Serve large bio-foundation models efficiently — quantization, batching, and GPU memory management',
+        subtopics:['Quantization (int8/fp8)','KV-cache & continuous batching','High-throughput serving','GPU memory profiling for long-context models'],
+        links:[
+          {label:'vLLM — official documentation', url:'https://docs.vllm.ai/en/latest/', why:'High-throughput inference/serving engine; relevant for long-context models like Evo 2'},
+          {label:'vLLM — official repo', url:'https://github.com/vllm-project/vllm', why:'Source, supported models, and quantization backends'}
+        ]},
+      {n:'D', focus:'Evaluation & Monitoring', detail:'Build rigorous held-out benchmarks and carry the baseline-beating discipline through to production',
+        subtopics:['Held-out benchmark design','Baseline comparison rigor (see Core Principle #1)','Model cards & documentation','Production monitoring & drift detection'],
+        links:[
+          {label:'Weights & Biases — Evaluations & observability', url:'https://docs.wandb.ai/', why:'Same platform, used here for eval tracking rather than training logs'}
+        ]}
+    ],
+    project: 'Instrument one of your Month 2 or 3 models with proper experiment tracking, fine-tune it with LoRA/PEFT instead of a full retrain, and serve it behind a lightweight inference endpoint you benchmark for latency and memory.',
+    readings: [
+      'Hugging Face PEFT documentation — parameter-efficient fine-tuning methods',
+      'vLLM documentation — high-throughput model serving',
+      'Weights & Biases documentation — experiment tracking and evaluation'
+    ],
+    milestone: 'A model from an earlier month is tracked, fine-tuned efficiently, and served behind a benchmarked inference endpoint'
+  },
+  {
+    id: 1, accent: 'var(--m1)', title: 'Biological Foundations & Classical Bioinformatics',
+    tagline: 'Learn the language of life before the algorithms that read it.',
+    weeks: [
+      {n:1, focus:'Central Dogma', detail:'DNA → RNA → Protein; genetic code, codon redundancy, mRNA optimization',
+        subtopics:['Transcription','Translation','Genetic code degeneracy','Codon usage bias','mRNA optimization'],
+        links:[
+          {label:'NCBI Bookshelf — Molecular Biology of the Cell (Central Dogma)', url:'https://www.ncbi.nlm.nih.gov/books/NBK26887/', why:'Free full-text chapter on DNA→RNA→protein'},
+          {label:'Rosalind — DNA & RNA problems', url:'https://rosalind.info/problems/list-view/', why:'Coding problems for transcription/translation basics'}
+        ]},
+      {n:2, focus:'Molecular Grounding', detail:'Proteins, nucleic acids, carbohydrates, lipids; Ramachandran plots; thermodynamics of folding',
+        subtopics:['Amino acid chemistry','Ramachandran plots','Protein folding thermodynamics','Nucleic acid structure','Lipids & carbohydrates'],
+        links:[
+          {label:'PDB-101 — Protein structure basics', url:'https://pdb101.rcsb.org/', why:'Visual, example-driven intro to structure & Ramachandran space'},
+          {label:'BSBE course syllabus (as supplied)', url:'', why:'Textbook refs: Campbell Biology, Lehninger Principles of Biochemistry'}
+        ]},
+      {n:3, focus:'Classical Algorithms', detail:'Sequence alignment (BLAST); dynamic programming (Needleman-Wunsch, Smith-Waterman)',
+        subtopics:['Global alignment (Needleman-Wunsch)','Local alignment (Smith-Waterman)','Scoring matrices (BLOSUM/PAM)','BLAST heuristics'],
+        links:[
+          {label:'NCBI BLAST', url:'https://blast.ncbi.nlm.nih.gov/Blast.cgi', why:'Run real alignments against public sequence databases'},
+          {label:'Rosalind — Alignment track', url:'https://rosalind.info/problems/list-view/', why:'Implement Needleman-Wunsch / Smith-Waterman yourself'}
+        ]},
+      {n:4, focus:'Consolidation + Project', detail:'Implement Needleman-Wunsch from scratch; run a BLAST search and interpret output',
+        subtopics:['E-values & bit scores','Alignment interpretation','Baseline benchmarking'],
+        links:[
+          {label:'Coursera — Bioinformatics Specialization (UC San Diego)', url:'https://www.coursera.org/specializations/bioinformatics', why:'Structured course covering this whole month, free to audit'}
+        ]}
+    ],
+    project: 'Write your own global/local sequence aligner (no libraries) and validate it against BLAST results on a real protein pair.',
+    readings: [
+      'Step-by-Step Roadmap to Learning Bioinformatics — high-level orientation',
+      'BSBE Department course syllabus — core topics + textbook refs (Campbell Biology, Lehninger Principles of Biochemistry)'
+    ],
+    milestone: 'Custom sequence aligner matches BLAST output on test cases'
+  },
+  {
+    id: 2, accent: 'var(--m2)', title: 'Structural Biology & Protein AI',
+    tagline: 'Where your transformer and diffusion background pays off directly.',
+    weeks: [
+      {n:5, focus:'AlphaFold 2', detail:'Evoformer block: joint MSA + pair representation processing; Triangle Attention for geometric consistency',
+        subtopics:['Multiple sequence alignments (MSA)','Evoformer block','Triangle attention','Structure module','pLDDT / PAE confidence'],
+        links:[
+          {label:'AlphaFold 2 — official repo (google-deepmind)', url:'https://github.com/google-deepmind/alphafold', why:'Source code + paper reference'},
+          {label:'ColabFold', url:'https://github.com/sokrypton/ColabFold', why:'Run AlphaFold-style folding for free in a browser notebook'}
+        ]},
+      {n:6, focus:'AlphaFold 3', detail:'Architectural shifts from AF2; diffusion-based structure generation',
+        subtopics:['Pairformer vs Evoformer','Diffusion module for structure','Ligand & nucleic-acid modeling'],
+        links:[
+          {label:'AlphaFold 3 — official repo', url:'https://github.com/google-deepmind/alphafold3', why:'Inference code + installation docs'},
+          {label:'AlphaFold Server', url:'https://alphafoldserver.com/', why:'Run AF3 predictions in-browser, no install'}
+        ]},
+      {n:7, focus:'Generative Structure Design', detail:'RFdiffusion — DDPMs generating 3D atomic point clouds',
+        subtopics:['Denoising diffusion probabilistic models (DDPM)','Motif scaffolding','Symmetric design','Binder design'],
+        links:[
+          {label:'RFdiffusion — official repo (RosettaCommons)', url:'https://github.com/RosettaCommons/RFdiffusion', why:'Code, weights, and worked design examples'}
+        ]},
+      {n:8, focus:'Inverse Folding + Project', detail:'ProteinMPNN — proteins as geometric graphs, sequence-from-backbone design',
+        subtopics:['Graph neural nets on protein backbones','Inverse folding','Sequence recovery rate','ESMFold for validation'],
+        links:[
+          {label:'ProteinMPNN — official repo (dauparas)', url:'https://github.com/dauparas/ProteinMPNN', why:'Code + example scripts for sequence design'},
+          {label:'ESM / ESMFold — official repo (Meta)', url:'https://github.com/facebookresearch/esm', why:'Fast structure prediction to validate your redesigns'}
+        ]}
+    ],
+    project: 'Run ESMFold or AlphaFold on a protein of interest, then use ProteinMPNN to redesign its sequence for a fixed backbone. Compare confidence metrics (pLDDT, PAE).',
+    readings: [
+      'The ML Engineer\'s Guide to Protein AI — primary text, architecture-to-task mapping',
+      'AlphaFold 3, Demystified — technical breakdown',
+      'AI & De Novo Protein Design articles — practical guides to ESMFold2, RFdiffusion'
+    ],
+    milestone: 'Successfully redesigned a protein sequence with ProteinMPNN and validated the resulting structure'
+  },
+  {
+    id: 3, accent: 'var(--m3)', title: 'Genomic Foundation Models & Multi-Omics',
+    tagline: 'From single proteins to whole genomes and cellular state.',
+    weeks: [
+      {n:9, focus:'Tokenization', detail:'Why DNA models moved from k-mers to Byte Pair Encoding — avoiding information leakage, improving efficiency',
+        subtopics:['K-mer tokenization','Byte Pair Encoding (BPE) for DNA','Information leakage in genomic tokenizers'],
+        links:[
+          {label:'Caduceus — project page & paper', url:'https://caduceus-dna.github.io/', why:'Discusses tokenization + architecture tradeoffs for DNA models'}
+        ]},
+      {n:10, focus:'Large-Scale GFMs', detail:'Evo 2 (1M-token context); AlphaGenome (base-pair-resolution functional tracks)',
+        subtopics:['Long-context genomic modeling','StripedHyena architecture','Base-pair-resolution functional prediction'],
+        links:[
+          {label:'Evo 2 — official repo (Arc Institute)', url:'https://github.com/ArcInstitute/evo2', why:'Local inference, generation, and variant-effect examples'},
+          {label:'Evo 2 — Arc Institute overview', url:'https://arcinstitute.org/tools/evo', why:'Model description, benchmarks, and Evo Designer interface'}
+        ]},
+      {n:11, focus:'Inductive Bias', detail:'Caduceus — bi-directional, reverse-complement equivariant architecture outperforming 10x larger models',
+        subtopics:['Mamba / state-space models','BiMamba (bi-directionality)','Reverse-complement equivariance'],
+        links:[
+          {label:'Caduceus paper (arXiv)', url:'https://arxiv.org/abs/2403.03234', why:'Full architecture + benchmark details'}
+        ]},
+      {n:12, focus:'Multi-Omics + Project', detail:'scGPT, Geneformer; integrate a genomic foundation model into a small variant-classification task',
+        subtopics:['Single-cell foundation models','Variant-effect prediction','Baseline benchmarking (k-mer/logistic regression)'],
+        links:[
+          {label:'Evo 2 — releases & usage examples', url:'https://github.com/ArcInstitute/evo2/releases', why:'Includes variant-effect prediction (TraitGym, BRCA1/2) examples to mirror'}
+        ]}
+    ],
+    project: 'Fine-tune or probe a pretrained genomic foundation model (e.g. a small Evo or Caduceus checkpoint) on a variant-effect prediction task, and benchmark it against a simple k-mer/logistic-regression baseline.',
+    readings: [
+      'Genomic Foundation Models in 2026 — critical evaluation on held-out test sets; where scGPT/Geneformer struggle',
+      'Bioinformatics Guides & Tutorials (Genomatics) — multi-omics integration, variant classification'
+    ],
+    milestone: 'Genomic foundation model beats your own baseline on a held-out variant task'
+  },
+  {
+    id: 4, accent: 'var(--m4)', title: 'AI-Driven Drug Discovery & Workflow Engineering',
+    tagline: 'Turn everything above into reproducible, production-grade pipelines.',
+    weeks: [
+      {n:13, focus:'Discovery Pipeline', detail:'Five stages: Target ID → Lead Generation → Preclinical → Clinical Trials → Regulatory Approval',
+        subtopics:['Target identification','Lead generation & optimization','Preclinical testing','Clinical trial design','Regulatory approval'],
+        links:[
+          {label:'Coursera — Bioinformatics Specialization (UC San Diego)', url:'https://www.coursera.org/specializations/bioinformatics', why:'Later modules touch translational/pipeline concepts'}
+        ]},
+      {n:14, focus:'Agentic Drug Discovery', detail:'DO Challenge benchmark — autonomous chemical-space exploration under limited labeling budgets (100k labels / 1M structures)',
+        subtopics:['Agentic exploration of chemical space','Active learning under label budgets','Benchmark design for AI agents'],
+        links:[]},
+      {n:15, focus:'Workflow Orchestration', detail:'Nextflow or Snakemake for reproducible pipelines across HPC/cloud',
+        subtopics:['Nextflow DSL2 basics','Snakemake rules & wildcards','Containers (Docker/Singularity) for reproducibility','HPC/cloud executors'],
+        links:[
+          {label:'Nextflow — official documentation', url:'https://www.nextflow.io/docs/latest/index.html', why:'Canonical getting-started + reference docs'},
+          {label:'nf-core', url:'https://nf-co.re/', why:'Community-curated, production-grade Nextflow pipelines to study'},
+          {label:'Snakemake — official documentation', url:'https://snakemake.readthedocs.io/', why:'Canonical getting-started + reference docs'}
+        ]},
+      {n:16, focus:'Capstone', detail:'Build an end-to-end pipeline combining a prior month\'s model with orchestration tooling',
+        subtopics:['Environment version-locking (conda/containers)','Pipeline testing & reproducibility'],
+        links:[]}
+    ],
+    project: 'Build a small Nextflow/Snakemake pipeline that takes raw sequence input, runs a structure or variant-effect model from Month 2/3, and outputs a ranked candidate list. Version-lock the environment.',
+    readings: [
+      'Artificial Intelligence in Drug Discovery and Development — traditional vs. AI-driven comparison',
+      'Can AI Agents Design and Implement Drug Discovery Pipelines? — the Deep Thought agentic system and benchmarks',
+      'How to Install Nextflow with Conda — environment setup'
+    ],
+    milestone: 'Capstone pipeline runs end-to-end and is reproducible from a clean environment'
+  },
+  {
+    id: 5, accent: 'var(--m5)', isCapstone: true, title: 'Capstone Project',
+    tagline: 'Ship one real, reproducible, end-to-end pipeline.',
+    weeks: [
+      {n:17, focus:'Scope the Pipeline', detail:'Pick your target model and sketch the DAG before writing any orchestration code',
+        subtopics:['Problem scoping','Choosing input model (structure, inverse folding, or variant-effect)','DAG / stage design','Input & output format spec'],
+        links:[
+          {label:'nf-core pipelines (browse for scoping examples)', url:'https://nf-co.re/', why:'See how real pipelines break work into stages'}
+        ]},
+      {n:18, focus:'Build & Wire the Stages', detail:'Implement ingestion → model inference → ranking/output as Nextflow processes or Snakemake rules',
+        subtopics:['Process/rule definitions','Channel or wildcard wiring','Containerizing each stage (Docker/Singularity)'],
+        links:[
+          {label:'Nextflow — official documentation', url:'https://www.nextflow.io/docs/latest/index.html', why:'Process, channel, and container syntax reference'},
+          {label:'Snakemake — official documentation', url:'https://snakemake.readthedocs.io/', why:'Rule, wildcard, and container syntax reference'}
+        ]},
+      {n:19, focus:'Reproducibility & Testing', detail:'Version-lock the environment and confirm the pipeline runs clean on a fresh machine or container',
+        subtopics:['Conda/container lock files','Clean-environment test run','Edge-case & failure handling'],
+        links:[
+          {label:'nf-core — pipeline testing conventions', url:'https://nf-co.re/', why:'Reference for how production pipelines structure tests'}
+        ]},
+      {n:20, focus:'Document & Ship', detail:'Write usage docs, include an example run, and publish the repo',
+        subtopics:['README & usage docs','Example dataset + expected output','Publishing (GitHub) & version tagging'],
+        links:[]}
+    ],
+    project: 'Deploy the full capstone: a Nextflow or Snakemake pipeline that ingests raw sequence data, runs a model from Month 2 or 3 (structure prediction, inverse folding, or variant-effect scoring), and outputs a ranked, documented candidate list — reproducible from a clean environment.',
+    readings: [
+      'Nextflow / Snakemake official docs — orchestration reference (see Month 4, Week 15)',
+      'nf-core pipeline conventions — how production-grade bioinformatics pipelines are structured and tested'
+    ],
+    milestone: 'Pipeline runs end-to-end on a clean machine or container and produces documented, ranked output — ready to demo'
+  }
+];
+
+const STORAGE_KEY = 'bioinfo-tracker-v1';
+let state = {};
+
+function taskId(monthId, type, idx){ return `m${monthId}-${type}-${idx}`; }
+
+function allTaskIds(){
+  const ids = [];
+  DATA.forEach(m=>{
+    m.weeks.forEach((w,i)=> ids.push(taskId(m.id,'week',i)));
+    m.readings.forEach((r,i)=> ids.push(taskId(m.id,'reading',i)));
+    ids.push(taskId(m.id,'project',0));
+    ids.push(taskId(m.id,'milestone',0));
+  });
+  return ids;
+}
+
+async function loadState(){
+  try{
+    const res = await window.storage.get(STORAGE_KEY, false);
+    state = res && res.value ? JSON.parse(res.value) : {};
+  }catch(e){
+    state = {};
+  }
+}
+
+async function saveState(){
+  try{
+    await window.storage.set(STORAGE_KEY, JSON.stringify(state), false);
+  }catch(e){
+    console.error('save failed', e);
+  }
+}
+
+function monthTaskIds(m){
+  const ids = [];
+  m.weeks.forEach((w,i)=> ids.push(taskId(m.id,'week',i)));
+  m.readings.forEach((r,i)=> ids.push(taskId(m.id,'reading',i)));
+  ids.push(taskId(m.id,'project',0));
+  ids.push(taskId(m.id,'milestone',0));
+  return ids;
+}
+
+function renderKaryo(){
+  const track = document.getElementById('karyoTrack');
+  track.innerHTML = '';
+  let totalDone = 0, totalAll = 0;
+  DATA.forEach(m=>{
+    const ids = monthTaskIds(m);
+    const seg = document.createElement('div');
+    seg.className = 'karyo-seg';
+    ids.forEach(id=>{
+      const band = document.createElement('div');
+      band.className = 'band' + (state[id] ? ' done' : '');
+      if(state[id]){ band.style.background = m.accent; totalDone++; }
+      totalAll++;
+      seg.appendChild(band);
+    });
+    track.appendChild(seg);
+  });
+  document.getElementById('overallPct').textContent = Math.round((totalDone/totalAll)*100) + '%';
+}
+
+function monthProgress(m){
+  const ids = monthTaskIds(m);
+  const done = ids.filter(id=>state[id]).length;
+  return {done, total: ids.length};
+}
+
+function rowHTML(id, title, detail, tag){
+  const checked = state[id] ? ' checked' : '';
+  return `
+    <div class="row${checked}" data-id="${id}">
+      <div class="box"><svg viewBox="0 0 16 16" fill="none"><path d="M2 8l4 4 8-8" stroke="#0A1412" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <div class="row-text">
+        <div class="row-title">${tag ? `<span class="week-tag">${tag}</span>` : ''}${title}</div>
+        ${detail ? `<div class="row-detail">${detail}</div>` : ''}
+      </div>
+    </div>`;
+}
+
+function weekBlockHTML(m, w, i){
+  const id = taskId(m.id, 'week', i);
+  const unit = m.unitLabel || 'Wk';
+  const chips = (w.subtopics||[]).map(s=>`<span class="subtopic-chip">${s}</span>`).join('');
+  const links = (w.links||[]).filter(l=>l.url).map(l=>`
+      <li>
+        <svg class="ext-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+        <a href="${l.url}" target="_blank" rel="noopener">${l.label}</a>
+        <span class="why">— ${l.why}</span>
+      </li>`).join('');
+  const studyBlock = links ? `
+    <div class="study-links">
+      <div class="k">Where to study this</div>
+      <ul class="study-list">${links}</ul>
+    </div>` : '';
+
+  return `
+    <div class="week-block">
+      ${rowHTML(id, w.focus, w.detail, `${unit} ${w.n}`)}
+      ${chips ? `<div class="subtopics">${chips}</div>` : ''}
+      ${studyBlock}
+    </div>
+  `;
+}
+
+function renderMonths(){
+  const container = document.getElementById('months');
+  container.innerHTML = DATA.map(m=>{
+    const prog = monthProgress(m);
+    const weekRows = m.weeks.map((w,i)=> weekBlockHTML(m, w, i)).join('');
+    const readingRows = m.readings.map((r,i)=> rowHTML(taskId(m.id,'reading',i), r, '', '')).join('');
+    const projectId = taskId(m.id,'project',0);
+    const milestoneId = taskId(m.id,'milestone',0);
+
+    const numLabel = m.isCapstone ? '★' : (m.isParallel ? '⚙' : String(m.id).padStart(2,'0'));
+    const chapterLabel = m.isCapstone ? `Final Chapter · ${m.tagline}` : (m.isParallel ? `Parallel Track · ${m.tagline}` : `Month ${m.id} · ${m.tagline}`);
+    const badge = m.isCapstone ? '<span class="capstone-badge">Capstone</span>' : (m.isParallel ? '<span class="parallel-badge">Ongoing</span>' : '');
+
+    return `
+    <div class="month${m.isCapstone ? ' capstone' : ''}${m.isParallel ? ' parallel' : ''}" data-month="${m.id}" style="--accent:${m.accent}">
+      <div class="month-head">
+        <div class="month-num">${numLabel}</div>
+        <div class="month-titles">
+          <div class="label">${chapterLabel}</div>
+          <div class="name">${m.title}${badge}</div>
+        </div>
+        <div class="month-progress">${prog.done}/${prog.total}</div>
+        <svg class="chevron" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M6 3l6 5-6 5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <div class="month-body">
+        <div class="month-body-inner">
+          <div class="section-label">Weekly Focus</div>
+          ${weekRows}
+          <div class="section-label">Project</div>
+          <div class="project-card">
+            <span class="k">Build this</span>
+            <p>${m.project}</p>
+          </div>
+          <div class="row${state[projectId] ? ' checked' : ''}" data-id="${projectId}">
+            <div class="box"><svg viewBox="0 0 16 16" fill="none"><path d="M2 8l4 4 8-8" stroke="#0A1412" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+            <div class="row-text"><div class="row-title">Mark project complete</div></div>
+          </div>
+          <div class="section-label">Reading</div>
+          ${readingRows}
+          <div class="section-label">Milestone</div>
+          <div class="milestone-card">
+            <span class="k">You're done with this month when</span>
+            <p>${m.milestone}</p>
+          </div>
+          <div class="row${state[milestoneId] ? ' checked' : ''}" data-id="${milestoneId}">
+            <div class="box"><svg viewBox="0 0 16 16" fill="none"><path d="M2 8l4 4 8-8" stroke="#0A1412" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+            <div class="row-text"><div class="row-title">Mark milestone reached</div></div>
+          </div>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+
+  // open the first month with incomplete tasks by default (prefer the core month sequence over the parallel track)
+  const core = DATA.filter(m => !m.isParallel);
+  const firstOpen = core.find(m => monthProgress(m).done < monthProgress(m).total) || core[0] || DATA[0];
+  const el = container.querySelector(`.month[data-month="${firstOpen.id}"]`);
+  if(el) openMonth(el);
+
+  attachHandlers();
+}
+
+function openMonth(el){
+  el.classList.add('open');
+  const body = el.querySelector('.month-body');
+  body.style.maxHeight = body.scrollHeight + 'px';
+}
+function closeMonth(el){
+  el.classList.remove('open');
+  const body = el.querySelector('.month-body');
+  body.style.maxHeight = 0;
+}
+
+function attachHandlers(){
+  document.querySelectorAll('.month-head').forEach(head=>{
+    head.addEventListener('click', ()=>{
+      const monthEl = head.closest('.month');
+      const isOpen = monthEl.classList.contains('open');
+      document.querySelectorAll('.month').forEach(m=> closeMonth(m));
+      if(!isOpen) openMonth(monthEl);
+    });
+  });
+
+  document.querySelectorAll('.row[data-id]').forEach(row=>{
+    row.addEventListener('click', async (e)=>{
+      const id = row.dataset.id;
+      state[id] = !state[id];
+      row.classList.toggle('checked', !!state[id]);
+      renderKaryo();
+      refreshMonthHeaderCount(row.closest('.month'));
+      await saveState();
+      // keep expanded height correct after class change
+      const body = row.closest('.month-body');
+      if(body && row.closest('.month').classList.contains('open')){
+        body.style.maxHeight = body.scrollHeight + 'px';
+      }
+    });
+  });
+}
+
+function refreshMonthHeaderCount(monthEl){
+  const id = parseInt(monthEl.dataset.month);
+  const m = DATA.find(x=>x.id===id);
+  const prog = monthProgress(m);
+  monthEl.querySelector('.month-progress').textContent = `${prog.done}/${prog.total}`;
+}
+
+document.getElementById('resetBtn').addEventListener('click', async ()=>{
+  if(!confirm('Reset all progress on this tracker? This cannot be undone.')) return;
+  state = {};
+  await saveState();
+  renderKaryo();
+  renderMonths();
+});
+
+(async function init(){
+  const note = document.getElementById('saveNote');
+  await loadState();
+  renderKaryo();
+  renderMonths();
+  note.textContent = 'progress saves automatically as you check items off';
+})();
+</script>
+</body>
+</html>
