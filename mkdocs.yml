@@ -1,0 +1,28 @@
+site_name: Comp Bio AI Engineering
+site_description: Documentation for the computational biology and AI engineering project.
+site_url: https://kunaltembhare003.github.io/Comp_Bio_AI_Engineering/
+repo_url: https://github.com/Kunaltembhare003/Comp_Bio_AI_Engineering
+repo_name: Kunaltembhare003/Comp_Bio_AI_Engineering
+edit_uri: edit/main/docs/
+
+nav:
+  - Home: index.md
+  - Getting Started: getting-started.md
+
+theme:
+  name: material
+  features:
+    - navigation.sections
+    - navigation.top
+    - content.code.copy
+
+markdown_extensions:
+  - admonition
+  - attr_list
+  - md_in_html
+  - tables
+  - toc:
+      permalink: true
+
+plugins:
+  - search
