@@ -23,6 +23,7 @@
     --eng: #8AA6FF;
     --amgen: #B15CC7;
     --stats: #7C93B3;
+    --cloud: #6C63FF;
   }
   *{box-sizing:border-box; margin:0; padding:0;}
   body{
@@ -268,6 +269,12 @@
     color:#101820; background:var(--stats); padding:2px 8px; border-radius:20px; margin-left:8px; font-weight:700;
     vertical-align:middle;
   }
+  .month.cloud{border-color: rgba(108,99,255,0.35); background: linear-gradient(180deg, rgba(108,99,255,0.07), var(--surface) 60%);}
+  .cloud-badge{
+    font-family:'JetBrains Mono', monospace; font-size:10px; letter-spacing:.1em; text-transform:uppercase;
+    color:#F1F0FF; background:var(--cloud); padding:2px 8px; border-radius:20px; margin-left:8px; font-weight:700;
+    vertical-align:middle;
+  }
   .footer{
     display:flex; justify-content:space-between; align-items:center; margin-top:26px;
     flex-wrap:wrap; gap:10px;
@@ -292,7 +299,7 @@
 
   <div class="eyebrow">Learning Path Tracker</div>
   <h1>GenAI Engineer → Bioinformatics</h1>
-  <p class="sub">A roadmap from transformers &amp; diffusion models to protein structure, genomic foundation models, and drug-discovery pipelines — extended with statistical genetics, clinical trial foundations, and a translational biomarker &amp; clinical-AI track aligned to industry roles (e.g. computational biology / precision medicine data scientist positions). Each chapter now includes a Definition of Done and interview-prep questions. Progress saves automatically.</p>
+  <p class="sub">A roadmap from transformers &amp; diffusion models to protein structure, genomic foundation models, and drug-discovery pipelines — extended with cloud/networking fundamentals (AWS &amp; Azure), statistical genetics, clinical trial foundations, and a translational biomarker &amp; clinical-AI track aligned to industry roles. Each chapter now includes a Definition of Done and interview-prep questions. Progress saves automatically.</p>
 
   <div class="karyo-card">
     <div class="karyo-top">
@@ -302,6 +309,7 @@
     <div class="karyo-track" id="karyoTrack"></div>
     <div class="karyo-legend">
       <div class="legend-item"><span class="legend-dot" style="background:var(--eng)"></span>AI Engineering (parallel)</div>
+      <div class="legend-item"><span class="legend-dot" style="background:var(--cloud)"></span>Cloud Fundamentals (parallel)</div>
       <div class="legend-item"><span class="legend-dot" style="background:var(--m1)"></span>Month 1 · Foundations</div>
       <div class="legend-item"><span class="legend-dot" style="background:var(--m2)"></span>Month 2 · Protein AI</div>
       <div class="legend-item"><span class="legend-dot" style="background:var(--m3)"></span>Month 3 · Genomic FMs</div>
@@ -374,6 +382,55 @@ const DATA = [
       {q:'Walk through the latency vs. throughput tradeoff when batching requests in a serving engine like vLLM.', p:'high'},
       {q:'How would you detect that a deployed model has silently drifted from its training-time performance?', p:'high'},
       {q:'What\'s the difference between quantization-aware training and post-training quantization, and when does each fail?', p:'med'}
+    ]
+  },
+  {
+    id: 8, accent: 'var(--cloud)', isCloud: true, isParallel: true, unitLabel: 'Module', title: 'Cloud Fundamentals & Networking (AWS & Azure)',
+    tagline: 'Run this alongside everything else — the plumbing that connects every service you touch, on AWS and Azure.',
+    keyTheme: 'The public-vs-private-subnet distinction (it\'s the route table, not the subnet itself) and the full DNS → load balancer → compute request path — both come up in almost any "how would you deploy this" systems question.',
+    weeks: [
+      {n:1, focus:'Core Networking: VPC/VNet, Subnets & Routing', detail:'The isolated network every cloud resource lives inside, and how traffic is allowed to move through it',
+        subtopics:['VPC (AWS) / VNet (Azure) — the isolated network container','CIDR blocks & IP addressing','Public vs. private subnets (defined by the route table, not the subnet)','Route tables','Internet Gateway vs. NAT Gateway'],
+        links:[
+          {label:'AWS — What is Amazon VPC?', url:'https://docs.aws.amazon.com/vpc/latest/userguide/what-is-amazon-vpc.html', why:'Official concept overview: VPCs, CIDR blocks, gateways'},
+          {label:'AWS — Subnets for your VPC', url:'https://docs.aws.amazon.com/vpc/latest/userguide/configure-subnets.html', why:'Exactly how public vs. private subnets and route tables work'},
+          {label:'Azure — Virtual networks and subnets design guide', url:'https://learn.microsoft.com/en-us/azure/networking/design-guide/vnets-subnets', why:'Azure\'s equivalent concepts (VNet, NSG) mapped against AWS terms'}
+        ]},
+      {n:2, focus:'DNS & Service Discovery', detail:'How a name becomes an address, and how traffic finds the right instance of a service',
+        subtopics:['DNS resolution basics (A / CNAME / alias records)','Route 53 (AWS) / Azure DNS','Private DNS zones & internal service discovery','Load balancers (ALB/NLB on AWS, Azure Load Balancer) sitting in front of compute'],
+        links:[
+          {label:'AWS Route 53 — official documentation', url:'https://docs.aws.amazon.com/route53/', why:'DNS records, routing policies, health checks'},
+          {label:'Azure DNS — official documentation', url:'https://learn.microsoft.com/en-us/azure/dns/', why:'Public and private DNS zones on Azure'}
+        ]},
+      {n:3, focus:'Compute, Storage & IAM', detail:'The pieces that actually do the work, and who is allowed to touch them',
+        subtopics:['EC2/Azure VM vs. containers (ECS/EKS/AKS)','Object storage (S3/Blob) vs. block storage (EBS/Managed Disks)','IAM roles & policies (AWS) vs. Azure RBAC','Security Groups/NSGs — the stateful firewall layer in front of each resource'],
+        links:[
+          {label:'AWS IAM — official documentation', url:'https://docs.aws.amazon.com/iam/', why:'Roles, policies, and least-privilege access patterns'},
+          {label:'Azure RBAC — official documentation', url:'https://learn.microsoft.com/en-us/azure/role-based-access-control/overview', why:'Azure\'s role-based access control model'}
+        ]},
+      {n:4, focus:'Running Bio-AI Pipelines on Cloud', detail:'Connecting everything above to the pipelines you\'ve already built in Month 4 and the Capstone',
+        subtopics:['AWS Batch / Azure Batch for HPC-style, intrinsically-parallel workloads','AWS HealthOmics — managed, HIPAA-eligible genomics workflow execution','Nextflow\'s native AWS Batch executor','GPU instances for training/inference (P/G-series on AWS, NC/ND-series on Azure)'],
+        links:[
+          {label:'Nextflow — Amazon Web Services (native AWS Batch executor)', url:'https://www.nextflow.io/docs/latest/aws.html', why:'Exactly how Nextflow submits and monitors jobs on AWS Batch'},
+          {label:'AWS Batch — official documentation', url:'https://docs.aws.amazon.com/batch/', why:'Managed batch compute — the layer Nextflow submits jobs to'},
+          {label:'Azure Batch — official documentation', url:'https://learn.microsoft.com/en-us/azure/batch/', why:'Azure\'s equivalent managed batch/HPC compute service'},
+          {label:'AWS HealthOmics — official documentation', url:'https://docs.aws.amazon.com/omics/', why:'Purpose-built managed service for genomics workflows, including native Nextflow support'}
+        ]}
+    ],
+    project: 'By hand (console or IaC), build a minimal VPC/VNet with a public and a private subnet, a NAT gateway, and a security group that only allows traffic from your own IP. Launch a small compute instance in the private subnet and reach it only through a bastion/jump host in the public subnet — so you\'ve physically built the request path a job in your Month 4/Capstone pipeline would travel.',
+    readings: [
+      'AWS VPC & Subnets documentation — core networking concepts',
+      'Azure Virtual Network design guide — Azure\'s equivalent concepts mapped to AWS terms',
+      'Nextflow AWS Batch integration docs — how a workflow engine actually talks to cloud infrastructure'
+    ],
+    milestone: 'Can draw, from memory, the full request path from "a scientist opens a URL" to "a GPU worker in a private subnet processes their data and writes results to object storage" — naming every service the request passes through',
+    interviewPrep: [
+      {q:'What actually makes a subnet "public" vs. "private" — is it a property of the subnet itself, or something else?', p:'high'},
+      {q:'Why do you need a NAT Gateway if your VPC already has an Internet Gateway?', p:'high'},
+      {q:'Walk through what happens, hop by hop, when a client resolves a domain name and connects to a service sitting behind a load balancer.', p:'high'},
+      {q:'What\'s the difference between a Security Group and a Network ACL (or an NSG vs. Azure Firewall) — which one is stateful?', p:'med'},
+      {q:'Why would you run a genomics pipeline on AWS Batch instead of just provisioning one very large EC2 instance?', p:'med'},
+      {q:'A Nextflow job submitted to AWS Batch is stuck in RUNNABLE and never executes — what are the first three things you\'d check?', p:'high'}
     ]
   },
   {
@@ -717,7 +774,7 @@ function renderPriorityMap(){
   const list = document.getElementById('priorityList');
   if(!list) return;
   list.innerHTML = DATA.map(m=>{
-    const label = m.isCapstone ? 'Capstone' : (m.isParallel ? 'AI Engineering' : (m.isIndustry ? m.title : (m.isStats ? m.title : `Month ${m.id} · ${m.title}`)));
+    const label = m.isCapstone ? 'Capstone' : (m.isCloud ? m.title : (m.isParallel ? 'AI Engineering' : (m.isIndustry ? m.title : (m.isStats ? m.title : `Month ${m.id} · ${m.title}`))));
     return `
     <div class="priority-row${m.topPriority ? ' top' : ''}">
       <div class="priority-dot" style="background:${m.accent}"></div>
@@ -801,12 +858,12 @@ function renderMonths(){
     const projectId = taskId(m.id,'project',0);
     const milestoneId = taskId(m.id,'milestone',0);
 
-    const numLabel = m.isCapstone ? '★' : (m.isParallel ? '⚙' : (m.isIndustry ? '⬡' : (m.isStats ? '∑' : String(m.id).padStart(2,'0'))));
-    const chapterLabel = m.isCapstone ? `Final Chapter · ${m.tagline}` : (m.isParallel ? `Parallel Track · ${m.tagline}` : (m.isIndustry ? `Industry-Aligned · ${m.tagline}` : (m.isStats ? `Foundations · ${m.tagline}` : `Month ${m.id} · ${m.tagline}`)));
-    const badge = m.isCapstone ? '<span class="capstone-badge">Capstone</span>' : (m.isParallel ? '<span class="parallel-badge">Ongoing</span>' : (m.isIndustry ? '<span class="industry-badge">Role-Aligned</span>' : (m.isStats ? '<span class="stats-badge">Core Stats</span>' : '')));
+    const numLabel = m.isCapstone ? '★' : (m.isCloud ? '☁' : (m.isParallel ? '⚙' : (m.isIndustry ? '⬡' : (m.isStats ? '∑' : String(m.id).padStart(2,'0')))));
+    const chapterLabel = m.isCapstone ? `Final Chapter · ${m.tagline}` : (m.isCloud ? `Parallel Track · ${m.tagline}` : (m.isParallel ? `Parallel Track · ${m.tagline}` : (m.isIndustry ? `Industry-Aligned · ${m.tagline}` : (m.isStats ? `Foundations · ${m.tagline}` : `Month ${m.id} · ${m.tagline}`))));
+    const badge = m.isCapstone ? '<span class="capstone-badge">Capstone</span>' : (m.isCloud ? '<span class="cloud-badge">Cloud &amp; Networking</span>' : (m.isParallel ? '<span class="parallel-badge">Ongoing</span>' : (m.isIndustry ? '<span class="industry-badge">Role-Aligned</span>' : (m.isStats ? '<span class="stats-badge">Core Stats</span>' : ''))));
 
     return `
-    <div class="month${m.isCapstone ? ' capstone' : ''}${m.isParallel ? ' parallel' : ''}${m.isIndustry ? ' industry' : ''}${m.isStats ? ' stats' : ''}" data-month="${m.id}" style="--accent:${m.accent}">
+    <div class="month${m.isCapstone ? ' capstone' : ''}${m.isParallel ? ' parallel' : ''}${m.isIndustry ? ' industry' : ''}${m.isStats ? ' stats' : ''}${m.isCloud ? ' cloud' : ''}" data-month="${m.id}" style="--accent:${m.accent}">
       <div class="month-head">
         <div class="month-num">${numLabel}</div>
         <div class="month-titles">
