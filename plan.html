@@ -244,6 +244,18 @@
     font-family:'JetBrains Mono', monospace; font-size:9px; letter-spacing:.07em; text-transform:uppercase;
     color:#1A1508; background:var(--m5); padding:1px 7px; border-radius:10px; font-weight:700;
   }
+  .why-read{
+    border-left: 3px solid var(--accent);
+    background: var(--surface-2);
+    border-radius: 0 10px 10px 0;
+    padding: 12px 16px;
+    margin: 4px 0 20px;
+  }
+  .why-read .k{
+    font-family:'JetBrains Mono', monospace; font-size:10.5px; letter-spacing:.08em; text-transform:uppercase;
+    color:var(--accent); margin-bottom:5px; display:block;
+  }
+  .why-read p{font-size:13.5px; color:var(--text); line-height:1.55;}
 
   .month.capstone{border-color: rgba(242,201,76,0.35); background: linear-gradient(180deg, rgba(242,201,76,0.05), var(--surface) 60%);}
   .month.parallel{border-color: rgba(138,166,255,0.35); background: linear-gradient(180deg, rgba(138,166,255,0.06), var(--surface) 60%);}
@@ -342,6 +354,7 @@ const DATA = [
   {
     id: 0, accent: 'var(--eng)', isParallel: true, unitLabel: 'Skill', title: 'AI Engineering for Bio Models',
     tagline: 'Run this alongside Months 1–4 — the production skills that turn notebooks into deployed systems.',
+    whyRead: 'A model that only runs in a notebook has almost no value to an employer. Every role this roadmap targets — research scientist, ML engineer, computational biologist — eventually needs you to hand off, scale, or maintain what you build. This chapter is the difference between "I trained a model once" and "you can trust me to own a model in production," and that distinction is exactly what separates junior from mid-level candidates in interviews.',
     keyTheme: 'LoRA/PEFT vs. full fine-tuning trade-offs, and how you\'d detect model drift in production — the standard MLOps screening questions.',
     weeks: [
       {n:'A', focus:'Experiment Tracking & Reproducibility', detail:'Track every run and version your data/configs so results are re-creatable months later',
@@ -387,6 +400,7 @@ const DATA = [
   {
     id: 8, accent: 'var(--cloud)', isCloud: true, isParallel: true, unitLabel: 'Module', title: 'Cloud Fundamentals & Networking (AWS & Azure)',
     tagline: 'Run this alongside everything else — the plumbing that connects every service you touch, on AWS and Azure.',
+    whyRead: 'Every model, dataset, and pipeline in this roadmap eventually has to run somewhere other than your laptop — almost always inside a company\'s AWS or Azure account. Without this chapter you can build a technically brilliant model and still freeze when asked "how would you actually deploy this?" — one of the most common questions once you move past pure research, and a near-guaranteed topic in any role touching production biomarker or genomic pipelines.',
     keyTheme: 'The public-vs-private-subnet distinction (it\'s the route table, not the subnet itself) and the full DNS → load balancer → compute request path — both come up in almost any "how would you deploy this" systems question.',
     weeks: [
       {n:1, focus:'Core Networking: VPC/VNet, Subnets & Routing', detail:'The isolated network every cloud resource lives inside, and how traffic is allowed to move through it',
@@ -436,6 +450,7 @@ const DATA = [
   {
     id: 1, accent: 'var(--m1)', title: 'Biological Foundations & Classical Bioinformatics',
     tagline: 'Learn the language of life before the algorithms that read it.',
+    whyRead: 'You cannot responsibly apply AI to biology without knowing what the data actually represents. This is exactly why so many ML engineers ship biologically nonsensical models — they optimize a loss function without understanding what a sequence, an alignment, or a fold actually means. Every later chapter in this roadmap assumes you have this foundation; skipping it means every subsequent concept is memorized rather than understood.',
     keyTheme: 'Alignment scoring intuition (E-values, BLOSUM/PAM) — the classic "do you actually understand what BLAST is doing" filter question.',
     weeks: [
       {n:1, focus:'Central Dogma', detail:'DNA → RNA → Protein; genetic code, codon redundancy, mRNA optimization',
@@ -479,6 +494,7 @@ const DATA = [
   {
     id: 2, accent: 'var(--m2)', title: 'Structural Biology & Protein AI',
     tagline: 'Where your transformer and diffusion background pays off directly.',
+    whyRead: 'This is the clearest, highest-leverage bridge between the GenAI skills you already have and biology. AlphaFold, RFdiffusion, and ProteinMPNN are among the most cited, highest-impact applications of deep learning in science — and because they reuse transformer and diffusion concepts you already know, this chapter converts existing expertise into domain credibility faster than anything else in the roadmap.',
     keyTheme: 'AlphaFold confidence metrics (pLDDT vs. PAE) and what they do — and don\'t — tell you about correctness.',
     weeks: [
       {n:5, focus:'AlphaFold 2', detail:'Evoformer block: joint MSA + pair representation processing; Triangle Attention for geometric consistency',
@@ -524,6 +540,7 @@ const DATA = [
   {
     id: 3, accent: 'var(--m3)', title: 'Genomic Foundation Models & Multi-Omics',
     tagline: 'From single proteins to whole genomes and cellular state.',
+    whyRead: 'Protein-level models only get you so far — most of precision medicine and drug discovery ultimately traces back to DNA and RNA. This chapter teaches you to reason about scale, tokenization, and inductive bias in long-sequence models, a skill set that transfers directly to any genomic-scale or long-context modeling problem you\'ll be asked to reason about, on the job or in an interview.',
     keyTheme: 'Why architecture (tokenization, equivariance) can beat raw scale — and how you\'d prove a claim like that isn\'t just a good story.',
     weeks: [
       {n:9, focus:'Tokenization', detail:'Why DNA models moved from k-mers to Byte Pair Encoding — avoiding information leakage, improving efficiency',
@@ -566,6 +583,7 @@ const DATA = [
   {
     id: 4, accent: 'var(--m4)', title: 'AI-Driven Drug Discovery & Workflow Engineering',
     tagline: 'Turn everything above into reproducible, production-grade pipelines.',
+    whyRead: 'A model that can\'t run reproducibly inside a real pipeline doesn\'t ship — full stop. This chapter is what turns a research result into something a pharma or biotech company could actually put into production, and questions about reproducibility, orchestration, and where AI genuinely helps in the drug discovery pipeline are near-universal in technical interviews for this field.',
     keyTheme: 'Reproducibility discipline — the exact things you\'d log so a run can be repeated identically a year later.',
     weeks: [
       {n:13, focus:'Discovery Pipeline', detail:'Five stages: Target ID → Lead Generation → Preclinical → Clinical Trials → Regulatory Approval',
@@ -605,6 +623,7 @@ const DATA = [
   {
     id: 7, accent: 'var(--stats)', isStats: true, title: 'Statistical Genetics & Clinical Trial Foundations',
     tagline: 'The biggest missing piece — GWAS-level genetics, rigorous hypothesis testing, and the clinical-trial vocabulary that makes biomarker work defensible.',
+    whyRead: 'This is the single most commonly underestimated gap for AI/ML engineers moving into biotech and pharma. You can build a technically excellent model and still fail an interview — or a real project — because you don\'t know what a multiple-testing correction, a prognostic biomarker, or MNAR missingness actually means in a clinical context. This chapter exists specifically to close that gap; skipping it is the most common reason technically strong candidates get filtered out of computational biology / clinical data science roles.',
     topPriority: true,
     keyTheme: 'Multiple-testing correction and the 4 biomarker types (predictive/prognostic/pharmacodynamic/diagnostic) — the fastest way to get screened out of a clinical data science role is fumbling these.',
     unitLabel: 'Module',
@@ -647,6 +666,7 @@ const DATA = [
   {
     id: 6, accent: 'var(--amgen)', isIndustry: true, unitLabel: 'Module', title: 'Translational Biomarker Science & Clinical AI',
     tagline: 'Built for roles like a computational biology / precision-medicine data scientist — biomarker modeling, multi-omic integration, and regulated AI on clinical trial data.',
+    whyRead: 'This chapter is a direct match to real job descriptions in the field — multi-omic integration, predictive/prognostic biomarker modeling, and causal inference are explicit, named responsibilities in postings like a computational biology data scientist role at a company like Amgen. If your goal is a role like that, this is arguably the single most important chapter in the entire roadmap, and the one most worth over-preparing for.',
     topPriority: true,
     keyTheme: 'Highest-weight chapter for roles like this — causal inference rigor (DoWhy\'s 4 steps) and predictive-vs-prognostic reasoning come up in nearly every technical round.',
     weeks: [
@@ -690,6 +710,7 @@ const DATA = [
   {
     id: 5, accent: 'var(--m5)', isCapstone: true, title: 'Capstone Project',
     tagline: 'Ship one real, reproducible, end-to-end pipeline.',
+    whyRead: 'Everything before this chapter is practice; the capstone is proof. Interviewers and hiring managers weight one real, documented, end-to-end project far more heavily than a long list of completed tutorials — this is the thing you\'ll actually talk through, link to, and defend under follow-up questions, so it deserves more care than any single module that came before it.',
     keyTheme: 'Your "walk me through a project" answer — for most technical-round interviews, this project literally IS the interview.',
     weeks: [
       {n:17, focus:'Scope the Pipeline', detail:'Pick your target model and sketch the DAG before writing any orchestration code',
@@ -875,6 +896,11 @@ function renderMonths(){
       </div>
       <div class="month-body">
         <div class="month-body-inner">
+          ${m.whyRead ? `
+          <div class="why-read">
+            <span class="k">Why this chapter matters</span>
+            <p>${m.whyRead}</p>
+          </div>` : ''}
           <div class="section-label">Weekly Focus</div>
           ${weekRows}
           <div class="section-label">Project</div>
