@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>GenAI → Bioinformatics :: Progress Tracker (Industry-Aligned)</title>
+<title>GenAI → Bioinformatics :: Progress Tracker</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700;800&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
@@ -21,9 +21,6 @@
     --m4: #E0673F;
     --m5: #F2C94C;
     --eng: #8AA6FF;
-    --amgen: #B15CC7;
-    --stats: #7C93B3;
-    --cloud: #6C63FF;
   }
   *{box-sizing:border-box; margin:0; padding:0;}
   body{
@@ -200,62 +197,6 @@
     color:var(--accent); margin-bottom:6px; display:block;
   }
   .project-card p{font-size:14px; color:var(--text);}
-  .interview-card{
-    background:var(--surface-2); border:1px dashed var(--border);
-    border-radius:10px; padding:14px 16px; margin-bottom:8px;
-  }
-  .interview-card .k{
-    font-family:'JetBrains Mono', monospace; font-size:11px; letter-spacing:.08em; text-transform:uppercase;
-    color:var(--accent); margin-bottom:8px; display:block;
-  }
-  .interview-list{list-style:none; display:flex; flex-direction:column; gap:7px;}
-  .interview-list li{
-    font-size:13.5px; color:var(--text); padding-left:16px; position:relative; line-height:1.45;
-  }
-  .interview-list li::before{
-    content:'?'; position:absolute; left:0; top:0; color:var(--accent); font-family:'JetBrains Mono', monospace; font-weight:700; font-size:12px;
-  }
-  .signal-badge{
-    display:inline-block; font-family:'JetBrains Mono', monospace; font-size:9.5px; letter-spacing:.06em; text-transform:uppercase;
-    color:#1A1508; background:var(--m5); padding:1px 6px; border-radius:10px; margin-right:7px; font-weight:700;
-    position:relative; top:-1px;
-  }
-  .interview-legend{
-    font-size:11.5px; color:var(--muted); margin-bottom:10px; display:flex; align-items:center; gap:6px;
-  }
-  .priority-card{
-    background:var(--surface); border:1px solid var(--border); border-radius:14px;
-    padding:20px 22px; margin-bottom:20px;
-  }
-  .priority-card-top{display:flex; justify-content:space-between; align-items:baseline; margin-bottom:14px; flex-wrap:wrap; gap:8px;}
-  .priority-card-top h2{font-family:'JetBrains Mono', monospace; font-size:14px; font-weight:700; letter-spacing:-0.01em;}
-  .priority-card-sub{font-size:12.5px; color:var(--muted);}
-  .priority-list{display:flex; flex-direction:column; gap:10px;}
-  .priority-row{
-    display:flex; align-items:flex-start; gap:12px; padding:10px 12px; border-radius:9px;
-    background:var(--surface-2); border:1px solid var(--border);
-  }
-  .priority-row.top{border-color: rgba(242,201,76,0.4);}
-  .priority-dot{width:10px; height:10px; border-radius:3px; margin-top:4px; flex-shrink:0;}
-  .priority-row-text{flex:1;}
-  .priority-row-name{font-weight:600; font-size:13.5px; display:flex; align-items:center; gap:8px; margin-bottom:2px;}
-  .priority-row-theme{font-size:13px; color:var(--muted); line-height:1.4;}
-  .top-tag{
-    font-family:'JetBrains Mono', monospace; font-size:9px; letter-spacing:.07em; text-transform:uppercase;
-    color:#1A1508; background:var(--m5); padding:1px 7px; border-radius:10px; font-weight:700;
-  }
-  .why-read{
-    border-left: 3px solid var(--accent);
-    background: var(--surface-2);
-    border-radius: 0 10px 10px 0;
-    padding: 12px 16px;
-    margin: 4px 0 20px;
-  }
-  .why-read .k{
-    font-family:'JetBrains Mono', monospace; font-size:10.5px; letter-spacing:.08em; text-transform:uppercase;
-    color:var(--accent); margin-bottom:5px; display:block;
-  }
-  .why-read p{font-size:13.5px; color:var(--text); line-height:1.55;}
 
   .month.capstone{border-color: rgba(242,201,76,0.35); background: linear-gradient(180deg, rgba(242,201,76,0.05), var(--surface) 60%);}
   .month.parallel{border-color: rgba(138,166,255,0.35); background: linear-gradient(180deg, rgba(138,166,255,0.06), var(--surface) 60%);}
@@ -267,24 +208,6 @@
   .parallel-badge{
     font-family:'JetBrains Mono', monospace; font-size:10px; letter-spacing:.1em; text-transform:uppercase;
     color:#0E1530; background:var(--eng); padding:2px 8px; border-radius:20px; margin-left:8px; font-weight:700;
-    vertical-align:middle;
-  }
-  .month.industry{border-color: rgba(177,92,199,0.35); background: linear-gradient(180deg, rgba(177,92,199,0.06), var(--surface) 60%);}
-  .industry-badge{
-    font-family:'JetBrains Mono', monospace; font-size:10px; letter-spacing:.1em; text-transform:uppercase;
-    color:#FBF2FC; background:var(--amgen); padding:2px 8px; border-radius:20px; margin-left:8px; font-weight:700;
-    vertical-align:middle;
-  }
-  .month.stats{border-color: rgba(124,147,179,0.35); background: linear-gradient(180deg, rgba(124,147,179,0.06), var(--surface) 60%);}
-  .stats-badge{
-    font-family:'JetBrains Mono', monospace; font-size:10px; letter-spacing:.1em; text-transform:uppercase;
-    color:#101820; background:var(--stats); padding:2px 8px; border-radius:20px; margin-left:8px; font-weight:700;
-    vertical-align:middle;
-  }
-  .month.cloud{border-color: rgba(108,99,255,0.35); background: linear-gradient(180deg, rgba(108,99,255,0.07), var(--surface) 60%);}
-  .cloud-badge{
-    font-family:'JetBrains Mono', monospace; font-size:10px; letter-spacing:.1em; text-transform:uppercase;
-    color:#F1F0FF; background:var(--cloud); padding:2px 8px; border-radius:20px; margin-left:8px; font-weight:700;
     vertical-align:middle;
   }
   .footer{
@@ -311,7 +234,7 @@
 
   <div class="eyebrow">Learning Path Tracker</div>
   <h1>GenAI Engineer → Bioinformatics</h1>
-  <p class="sub">A roadmap from transformers &amp; diffusion models to protein structure, genomic foundation models, and drug-discovery pipelines — extended with cloud/networking fundamentals (AWS &amp; Azure), statistical genetics, clinical trial foundations, and a translational biomarker &amp; clinical-AI track aligned to industry roles. Each chapter now includes a Definition of Done and interview-prep questions. Progress saves automatically.</p>
+  <p class="sub">A 4-month roadmap from transformers &amp; diffusion models to protein structure, genomic foundation models, and drug-discovery pipelines. Progress saves automatically.</p>
 
   <div class="karyo-card">
     <div class="karyo-top">
@@ -321,23 +244,12 @@
     <div class="karyo-track" id="karyoTrack"></div>
     <div class="karyo-legend">
       <div class="legend-item"><span class="legend-dot" style="background:var(--eng)"></span>AI Engineering (parallel)</div>
-      <div class="legend-item"><span class="legend-dot" style="background:var(--cloud)"></span>Cloud Fundamentals (parallel)</div>
       <div class="legend-item"><span class="legend-dot" style="background:var(--m1)"></span>Month 1 · Foundations</div>
       <div class="legend-item"><span class="legend-dot" style="background:var(--m2)"></span>Month 2 · Protein AI</div>
       <div class="legend-item"><span class="legend-dot" style="background:var(--m3)"></span>Month 3 · Genomic FMs</div>
       <div class="legend-item"><span class="legend-dot" style="background:var(--m4)"></span>Month 4 · Drug Discovery</div>
-      <div class="legend-item"><span class="legend-dot" style="background:var(--stats)"></span>Statistical Genetics &amp; Clinical Trials</div>
-      <div class="legend-item"><span class="legend-dot" style="background:var(--amgen)"></span>Translational Biomarker &amp; Clinical AI</div>
       <div class="legend-item"><span class="legend-dot" style="background:var(--m5)"></span>Capstone Project</div>
     </div>
-  </div>
-
-  <div class="priority-card">
-    <div class="priority-card-top">
-      <h2>Interview Priority Map</h2>
-      <span class="priority-card-sub">If you only have 10 minutes before the call, read this</span>
-    </div>
-    <div class="priority-list" id="priorityList"></div>
   </div>
 
   <div id="months"></div>
@@ -354,8 +266,6 @@ const DATA = [
   {
     id: 0, accent: 'var(--eng)', isParallel: true, unitLabel: 'Skill', title: 'AI Engineering for Bio Models',
     tagline: 'Run this alongside Months 1–4 — the production skills that turn notebooks into deployed systems.',
-    whyRead: 'A model that only runs in a notebook has almost no value to an employer. Every role this roadmap targets — research scientist, ML engineer, computational biologist — eventually needs you to hand off, scale, or maintain what you build. This chapter is the difference between "I trained a model once" and "you can trust me to own a model in production," and that distinction is exactly what separates junior from mid-level candidates in interviews.',
-    keyTheme: 'LoRA/PEFT vs. full fine-tuning trade-offs, and how you\'d detect model drift in production — the standard MLOps screening questions.',
     weeks: [
       {n:'A', focus:'Experiment Tracking & Reproducibility', detail:'Track every run and version your data/configs so results are re-creatable months later',
         subtopics:['Experiment tracking (W&B/MLflow)','Config & seed management','Dataset versioning (DVC)','Environment version-locking'],
@@ -387,71 +297,11 @@ const DATA = [
       'vLLM documentation — high-throughput model serving',
       'Weights & Biases documentation — experiment tracking and evaluation'
     ],
-    milestone: 'A model from an earlier month is tracked, fine-tuned efficiently, and served behind a benchmarked inference endpoint',
-    interviewPrep: [
-      {q:'Why does LoRA use a low-rank update instead of fine-tuning all weights, and what does the rank actually control?', p:'high'},
-      {q:'How would you decide between full fine-tuning, LoRA, and prompt-based adaptation for a given task and compute budget?', p:'high'},
-      {q:'What breaks if you skip experiment tracking on a long-running fine-tuning job, and how would you retroactively reconstruct what happened?', p:'med'},
-      {q:'Walk through the latency vs. throughput tradeoff when batching requests in a serving engine like vLLM.', p:'high'},
-      {q:'How would you detect that a deployed model has silently drifted from its training-time performance?', p:'high'},
-      {q:'What\'s the difference between quantization-aware training and post-training quantization, and when does each fail?', p:'med'}
-    ]
-  },
-  {
-    id: 8, accent: 'var(--cloud)', isCloud: true, isParallel: true, unitLabel: 'Module', title: 'Cloud Fundamentals & Networking (AWS & Azure)',
-    tagline: 'Run this alongside everything else — the plumbing that connects every service you touch, on AWS and Azure.',
-    whyRead: 'Every model, dataset, and pipeline in this roadmap eventually has to run somewhere other than your laptop — almost always inside a company\'s AWS or Azure account. Without this chapter you can build a technically brilliant model and still freeze when asked "how would you actually deploy this?" — one of the most common questions once you move past pure research, and a near-guaranteed topic in any role touching production biomarker or genomic pipelines.',
-    keyTheme: 'The public-vs-private-subnet distinction (it\'s the route table, not the subnet itself) and the full DNS → load balancer → compute request path — both come up in almost any "how would you deploy this" systems question.',
-    weeks: [
-      {n:1, focus:'Core Networking: VPC/VNet, Subnets & Routing', detail:'The isolated network every cloud resource lives inside, and how traffic is allowed to move through it',
-        subtopics:['VPC (AWS) / VNet (Azure) — the isolated network container','CIDR blocks & IP addressing','Public vs. private subnets (defined by the route table, not the subnet)','Route tables','Internet Gateway vs. NAT Gateway'],
-        links:[
-          {label:'AWS — What is Amazon VPC?', url:'https://docs.aws.amazon.com/vpc/latest/userguide/what-is-amazon-vpc.html', why:'Official concept overview: VPCs, CIDR blocks, gateways'},
-          {label:'AWS — Subnets for your VPC', url:'https://docs.aws.amazon.com/vpc/latest/userguide/configure-subnets.html', why:'Exactly how public vs. private subnets and route tables work'},
-          {label:'Azure — Virtual networks and subnets design guide', url:'https://learn.microsoft.com/en-us/azure/networking/design-guide/vnets-subnets', why:'Azure\'s equivalent concepts (VNet, NSG) mapped against AWS terms'}
-        ]},
-      {n:2, focus:'DNS & Service Discovery', detail:'How a name becomes an address, and how traffic finds the right instance of a service',
-        subtopics:['DNS resolution basics (A / CNAME / alias records)','Route 53 (AWS) / Azure DNS','Private DNS zones & internal service discovery','Load balancers (ALB/NLB on AWS, Azure Load Balancer) sitting in front of compute'],
-        links:[
-          {label:'AWS Route 53 — official documentation', url:'https://docs.aws.amazon.com/route53/', why:'DNS records, routing policies, health checks'},
-          {label:'Azure DNS — official documentation', url:'https://learn.microsoft.com/en-us/azure/dns/', why:'Public and private DNS zones on Azure'}
-        ]},
-      {n:3, focus:'Compute, Storage & IAM', detail:'The pieces that actually do the work, and who is allowed to touch them',
-        subtopics:['EC2/Azure VM vs. containers (ECS/EKS/AKS)','Object storage (S3/Blob) vs. block storage (EBS/Managed Disks)','IAM roles & policies (AWS) vs. Azure RBAC','Security Groups/NSGs — the stateful firewall layer in front of each resource'],
-        links:[
-          {label:'AWS IAM — official documentation', url:'https://docs.aws.amazon.com/iam/', why:'Roles, policies, and least-privilege access patterns'},
-          {label:'Azure RBAC — official documentation', url:'https://learn.microsoft.com/en-us/azure/role-based-access-control/overview', why:'Azure\'s role-based access control model'}
-        ]},
-      {n:4, focus:'Running Bio-AI Pipelines on Cloud', detail:'Connecting everything above to the pipelines you\'ve already built in Month 4 and the Capstone',
-        subtopics:['AWS Batch / Azure Batch for HPC-style, intrinsically-parallel workloads','AWS HealthOmics — managed, HIPAA-eligible genomics workflow execution','Nextflow\'s native AWS Batch executor','GPU instances for training/inference (P/G-series on AWS, NC/ND-series on Azure)'],
-        links:[
-          {label:'Nextflow — Amazon Web Services (native AWS Batch executor)', url:'https://www.nextflow.io/docs/latest/aws.html', why:'Exactly how Nextflow submits and monitors jobs on AWS Batch'},
-          {label:'AWS Batch — official documentation', url:'https://docs.aws.amazon.com/batch/', why:'Managed batch compute — the layer Nextflow submits jobs to'},
-          {label:'Azure Batch — official documentation', url:'https://learn.microsoft.com/en-us/azure/batch/', why:'Azure\'s equivalent managed batch/HPC compute service'},
-          {label:'AWS HealthOmics — official documentation', url:'https://docs.aws.amazon.com/omics/', why:'Purpose-built managed service for genomics workflows, including native Nextflow support'}
-        ]}
-    ],
-    project: 'By hand (console or IaC), build a minimal VPC/VNet with a public and a private subnet, a NAT gateway, and a security group that only allows traffic from your own IP. Launch a small compute instance in the private subnet and reach it only through a bastion/jump host in the public subnet — so you\'ve physically built the request path a job in your Month 4/Capstone pipeline would travel.',
-    readings: [
-      'AWS VPC & Subnets documentation — core networking concepts',
-      'Azure Virtual Network design guide — Azure\'s equivalent concepts mapped to AWS terms',
-      'Nextflow AWS Batch integration docs — how a workflow engine actually talks to cloud infrastructure'
-    ],
-    milestone: 'Can draw, from memory, the full request path from "a scientist opens a URL" to "a GPU worker in a private subnet processes their data and writes results to object storage" — naming every service the request passes through',
-    interviewPrep: [
-      {q:'What actually makes a subnet "public" vs. "private" — is it a property of the subnet itself, or something else?', p:'high'},
-      {q:'Why do you need a NAT Gateway if your VPC already has an Internet Gateway?', p:'high'},
-      {q:'Walk through what happens, hop by hop, when a client resolves a domain name and connects to a service sitting behind a load balancer.', p:'high'},
-      {q:'What\'s the difference between a Security Group and a Network ACL (or an NSG vs. Azure Firewall) — which one is stateful?', p:'med'},
-      {q:'Why would you run a genomics pipeline on AWS Batch instead of just provisioning one very large EC2 instance?', p:'med'},
-      {q:'A Nextflow job submitted to AWS Batch is stuck in RUNNABLE and never executes — what are the first three things you\'d check?', p:'high'}
-    ]
+    milestone: 'A model from an earlier month is tracked, fine-tuned efficiently, and served behind a benchmarked inference endpoint'
   },
   {
     id: 1, accent: 'var(--m1)', title: 'Biological Foundations & Classical Bioinformatics',
     tagline: 'Learn the language of life before the algorithms that read it.',
-    whyRead: 'You cannot responsibly apply AI to biology without knowing what the data actually represents. This is exactly why so many ML engineers ship biologically nonsensical models — they optimize a loss function without understanding what a sequence, an alignment, or a fold actually means. Every later chapter in this roadmap assumes you have this foundation; skipping it means every subsequent concept is memorized rather than understood.',
-    keyTheme: 'Alignment scoring intuition (E-values, BLOSUM/PAM) — the classic "do you actually understand what BLAST is doing" filter question.',
     weeks: [
       {n:1, focus:'Central Dogma', detail:'DNA → RNA → Protein; genetic code, codon redundancy, mRNA optimization',
         subtopics:['Transcription','Translation','Genetic code degeneracy','Codon usage bias','mRNA optimization'],
@@ -482,20 +332,11 @@ const DATA = [
       'Step-by-Step Roadmap to Learning Bioinformatics — high-level orientation',
       'BSBE Department course syllabus — core topics + textbook refs (Campbell Biology, Lehninger Principles of Biochemistry)'
     ],
-    milestone: 'Custom sequence aligner matches BLAST output on test cases',
-    interviewPrep: [
-      {q:'Why is Smith-Waterman guaranteed to find the optimal local alignment, and what does the recurrence relation actually encode?', p:'high'},
-      {q:'What is the difference between homology, similarity, and identity — and why do people conflate them incorrectly?', p:'high'},
-      {q:'How does a BLOSUM62 matrix differ from PAM250, and when would you choose one over the other?', p:'med'},
-      {q:'What does a very low E-value actually tell you, and what does it NOT tell you about biological significance?', p:'high'},
-      {q:'Why is dynamic programming guaranteed optimal here but doesn\'t scale to full-genome alignment — what do heuristic methods like BLAST trade away?', p:'high'}
-    ]
+    milestone: 'Custom sequence aligner matches BLAST output on test cases'
   },
   {
     id: 2, accent: 'var(--m2)', title: 'Structural Biology & Protein AI',
     tagline: 'Where your transformer and diffusion background pays off directly.',
-    whyRead: 'This is the clearest, highest-leverage bridge between the GenAI skills you already have and biology. AlphaFold, RFdiffusion, and ProteinMPNN are among the most cited, highest-impact applications of deep learning in science — and because they reuse transformer and diffusion concepts you already know, this chapter converts existing expertise into domain credibility faster than anything else in the roadmap.',
-    keyTheme: 'AlphaFold confidence metrics (pLDDT vs. PAE) and what they do — and don\'t — tell you about correctness.',
     weeks: [
       {n:5, focus:'AlphaFold 2', detail:'Evoformer block: joint MSA + pair representation processing; Triangle Attention for geometric consistency',
         subtopics:['Multiple sequence alignments (MSA)','Evoformer block','Triangle attention','Structure module','pLDDT / PAE confidence'],
@@ -527,21 +368,11 @@ const DATA = [
       'AlphaFold 3, Demystified — technical breakdown',
       'AI & De Novo Protein Design articles — practical guides to ESMFold2, RFdiffusion'
     ],
-    milestone: 'Successfully redesigned a protein sequence with ProteinMPNN and validated the resulting structure',
-    interviewPrep: [
-      {q:'Why does AlphaFold process MSA and pair representations jointly instead of separately, and what does Triangle Attention enforce geometrically?', p:'high'},
-      {q:'What is the difference between pLDDT and PAE, and why is high pLDDT not sufficient evidence of a correct structure?', p:'high'},
-      {q:'How does RFdiffusion adapt a general DDPM framework to generate valid 3D protein backbones instead of images?', p:'med'},
-      {q:'Why is inverse folding (ProteinMPNN) a fundamentally different problem than forward structure prediction?', p:'high'},
-      {q:'What\'s the practical failure mode of AlphaFold on a protein with no good MSA — an orphan protein or a de novo design?', p:'high'},
-      {q:'If a designed protein has high ProteinMPNN confidence but fails experimentally, what\'s your first hypothesis?', p:'med'}
-    ]
+    milestone: 'Successfully redesigned a protein sequence with ProteinMPNN and validated the resulting structure'
   },
   {
     id: 3, accent: 'var(--m3)', title: 'Genomic Foundation Models & Multi-Omics',
     tagline: 'From single proteins to whole genomes and cellular state.',
-    whyRead: 'Protein-level models only get you so far — most of precision medicine and drug discovery ultimately traces back to DNA and RNA. This chapter teaches you to reason about scale, tokenization, and inductive bias in long-sequence models, a skill set that transfers directly to any genomic-scale or long-context modeling problem you\'ll be asked to reason about, on the job or in an interview.',
-    keyTheme: 'Why architecture (tokenization, equivariance) can beat raw scale — and how you\'d prove a claim like that isn\'t just a good story.',
     weeks: [
       {n:9, focus:'Tokenization', detail:'Why DNA models moved from k-mers to Byte Pair Encoding — avoiding information leakage, improving efficiency',
         subtopics:['K-mer tokenization','Byte Pair Encoding (BPE) for DNA','Information leakage in genomic tokenizers'],
@@ -570,21 +401,11 @@ const DATA = [
       'Genomic Foundation Models in 2026 — critical evaluation on held-out test sets; where scGPT/Geneformer struggle',
       'Bioinformatics Guides & Tutorials (Genomatics) — multi-omics integration, variant classification'
     ],
-    milestone: 'Genomic foundation model beats your own baseline on a held-out variant task',
-    interviewPrep: [
-      {q:'Why did genomic foundation models move away from fixed k-mer tokenization toward BPE, and what problem does that solve?', p:'high'},
-      {q:'What does reverse-complement equivariance mean architecturally, and why does Caduceus baking it in outperform larger non-equivariant models?', p:'high'},
-      {q:'If a genomic foundation model beats your baseline on AUROC but not on calibration, what would you report and why does it matter?', p:'high'},
-      {q:'What is the practical difference between a genomic foundation model and a single-cell foundation model like scGPT — what is the "token" in each?', p:'med'},
-      {q:'Why does a 1M-token context matter specifically for genomics, compared to NLP where long context is also valuable?', p:'med'},
-      {q:'What\'s a concrete failure mode of applying a genomic foundation model pretrained on reference-genome data to a rare-variant prediction task?', p:'high'}
-    ]
+    milestone: 'Genomic foundation model beats your own baseline on a held-out variant task'
   },
   {
     id: 4, accent: 'var(--m4)', title: 'AI-Driven Drug Discovery & Workflow Engineering',
     tagline: 'Turn everything above into reproducible, production-grade pipelines.',
-    whyRead: 'A model that can\'t run reproducibly inside a real pipeline doesn\'t ship — full stop. This chapter is what turns a research result into something a pharma or biotech company could actually put into production, and questions about reproducibility, orchestration, and where AI genuinely helps in the drug discovery pipeline are near-universal in technical interviews for this field.',
-    keyTheme: 'Reproducibility discipline — the exact things you\'d log so a run can be repeated identically a year later.',
     weeks: [
       {n:13, focus:'Discovery Pipeline', detail:'Five stages: Target ID → Lead Generation → Preclinical → Clinical Trials → Regulatory Approval',
         subtopics:['Target identification','Lead generation & optimization','Preclinical testing','Clinical trial design','Regulatory approval'],
@@ -611,107 +432,11 @@ const DATA = [
       'Can AI Agents Design and Implement Drug Discovery Pipelines? — the Deep Thought agentic system and benchmarks',
       'How to Install Nextflow with Conda — environment setup'
     ],
-    milestone: 'Capstone pipeline runs end-to-end and is reproducible from a clean environment',
-    interviewPrep: [
-      {q:'Where in the five-stage drug discovery pipeline does AI currently provide the most reliable uplift, and where is it still weakest?', p:'med'},
-      {q:'What is the difference between a Nextflow process and a Snakemake rule at a conceptual level, and when would you pick one over the other?', p:'med'},
-      {q:'Why does the DO Challenge cap the labeling budget instead of giving agents the full dataset — what real-world constraint does that simulate?', p:'med'},
-      {q:'What specific pieces of information does a reproducible pipeline run need to log to be re-run identically a year later?', p:'high'},
-      {q:'How would you validate that an agentic system exploring chemical space isn\'t just exploiting an artifact in the scoring function?', p:'high'}
-    ]
-  },
-  {
-    id: 7, accent: 'var(--stats)', isStats: true, title: 'Statistical Genetics & Clinical Trial Foundations',
-    tagline: 'The biggest missing piece — GWAS-level genetics, rigorous hypothesis testing, and the clinical-trial vocabulary that makes biomarker work defensible.',
-    whyRead: 'This is the single most commonly underestimated gap for AI/ML engineers moving into biotech and pharma. You can build a technically excellent model and still fail an interview — or a real project — because you don\'t know what a multiple-testing correction, a prognostic biomarker, or MNAR missingness actually means in a clinical context. This chapter exists specifically to close that gap; skipping it is the most common reason technically strong candidates get filtered out of computational biology / clinical data science roles.',
-    topPriority: true,
-    keyTheme: 'Multiple-testing correction and the 4 biomarker types (predictive/prognostic/pharmacodynamic/diagnostic) — the fastest way to get screened out of a clinical data science role is fumbling these.',
-    unitLabel: 'Module',
-    weeks: [
-      {n:1, focus:'Population & Statistical Genetics', detail:'The genetics layer underneath biomarker discovery — variants, linkage, and how genotype gets connected to phenotype',
-        subtopics:['SNPs & linkage disequilibrium (LD)','GWAS','Polygenic risk scores','eQTL / pQTL','Mendelian randomization'],
-        links:[
-          {label:'GWAS Catalog (EMBL-EBI)', url:'https://www.ebi.ac.uk/gwas/', why:'Browse real GWAS summary statistics and study designs'}
-        ]},
-      {n:2, focus:'Statistical Rigor for Biomedical Data', detail:'The hypothesis-testing and regression machinery that keeps biomarker claims honest',
-        subtopics:['Hypothesis testing & p-values','Multiple testing correction (Benjamini-Hochberg FDR)','Regularized regression (Lasso/Elastic Net)','Confounding & batch effects','Statistical power & effect size'],
-        links:[
-          {label:'statsmodels — official documentation', url:'https://www.statsmodels.org/stable/index.html', why:'Regression, hypothesis testing, and multiple-comparison tools in Python'}
-        ]},
-      {n:3, focus:'Clinical Trial Data Foundations', detail:'The vocabulary needed to talk to clinicians and biostatisticians without translation loss',
-        subtopics:['Trial phases, randomization & control groups','Efficacy vs. safety endpoints','Predictive vs. prognostic vs. pharmacodynamic vs. diagnostic biomarkers','Inclusion/exclusion criteria & baseline covariates'],
-        links:[]},
-      {n:4, focus:'Longitudinal Data & Missing Data', detail:'Repeated-measures modeling and the missingness mechanisms that quietly bias clinical models',
-        subtopics:['Mixed-effects models (random intercept/slope)','Time × treatment interaction','MCAR / MAR / MNAR','Multiple imputation (MICE)'],
-        links:[
-          {label:'statsmodels — Linear Mixed Effects Models', url:'https://www.statsmodels.org/stable/mixed_linear.html', why:'MixedLM for random intercept/slope models on repeated-measures data'}
-        ]}
-    ],
-    project: 'Run a small GWAS-style association scan on a public summary-statistics dataset with proper multiple-testing correction, then simulate a longitudinal dataset with injected missingness and fit a mixed-effects model — documenting how the missingness mechanism (MCAR vs. MAR vs. MNAR) changes your conclusions.',
-    readings: [
-      'GWAS Catalog documentation — study design and summary statistics format',
-      'statsmodels documentation — regression, hypothesis testing, and MixedLM',
-      'Yao et al. (2025) — causal inference methods with multi-omics data (see Translational Biomarker chapter for full citation)'
-    ],
-    milestone: 'Can correctly apply an FDR correction to a multiple-testing scenario, explain the difference between predictive/prognostic/pharmacodynamic/diagnostic biomarkers from memory, and justify a missing-data handling choice using the correct MCAR/MAR/MNAR mechanism',
-    interviewPrep: [
-      {q:'Why do you need multiple-testing correction in a GWAS with a million SNPs, and how does Benjamini-Hochberg differ from a Bonferroni correction?', p:'high'},
-      {q:'What is the difference between a predictive, prognostic, pharmacodynamic, and diagnostic biomarker — give a one-line example of each.', p:'high'},
-      {q:'If data are MNAR, why can multiple imputation still be biased, and what would you do instead?', p:'high'},
-      {q:'What does a random slope add to a mixed-effects model that a random intercept alone cannot capture?', p:'med'},
-      {q:'What is confounding by indication, and why is it a specific, recurring problem in observational clinical biomarker studies?', p:'high'},
-      {q:'How would you handle a biomarker that\'s only measured post-baseline in patients who respond to treatment — informative missingness?', p:'high'}
-    ]
-  },
-  {
-    id: 6, accent: 'var(--amgen)', isIndustry: true, unitLabel: 'Module', title: 'Translational Biomarker Science & Clinical AI',
-    tagline: 'Built for roles like a computational biology / precision-medicine data scientist — biomarker modeling, multi-omic integration, and regulated AI on clinical trial data.',
-    whyRead: 'This chapter is a direct match to real job descriptions in the field — multi-omic integration, predictive/prognostic biomarker modeling, and causal inference are explicit, named responsibilities in postings like a computational biology data scientist role at a company like Amgen. If your goal is a role like that, this is arguably the single most important chapter in the entire roadmap, and the one most worth over-preparing for.',
-    topPriority: true,
-    keyTheme: 'Highest-weight chapter for roles like this — causal inference rigor (DoWhy\'s 4 steps) and predictive-vs-prognostic reasoning come up in nearly every technical round.',
-    weeks: [
-      {n:1, focus:'Multi-Omic Integration Frameworks', detail:'Jointly model genomics, transcriptomics, proteomics, epigenomics, imaging, and clinical covariates',
-        subtopics:['MOFA / MOFA+ (latent-factor integration)','Matrix & tensor factorization','Graph-based multi-omic integration','Imaging + omics + clinical covariate fusion'],
-        links:[
-          {label:'MOFA2 — official repo (bioFAM)', url:'https://github.com/bioFAM/MOFA2', why:'Reference implementation of factor-model multi-omic integration'},
-          {label:'mofapy2 — Python implementation', url:'https://github.com/bioFAM/mofapy2', why:'Python-side MOFA training if you\'re not working in R'}
-        ]},
-      {n:2, focus:'Predictive & Prognostic Biomarker Modeling', detail:'Model response, resistance, disease stratification, and adverse-event endpoints from trial data',
-        subtopics:['Response/resistance biomarker discovery','Disease stratification models','Adverse-event & safety endpoint modeling','Patient selection strategy design'],
-        links:[
-          {label:'lifelines — survival analysis in Python', url:'https://lifelines.readthedocs.io/', why:'Core library for time-to-event endpoints used throughout biomarker modeling'}
-        ]},
-      {n:3, focus:'Advanced Clinical & Causal Statistics', detail:'The statistical machinery clinical development actually runs on, plus moving from association to defensible causal claims',
-        subtopics:['Survival analysis (Cox, competing risks)','Longitudinal & mixed-effects models','Missing data & imputation strategies','Confounder adjustment, propensity scores, and causal inference'],
-        links:[
-          {label:'lifelines — Cox & survival regression', url:'https://lifelines.readthedocs.io/en/latest/Survival%20Analysis%20intro.html', why:'Hands-on intro to censoring, hazard, and survival estimation'},
-          {label:'DoWhy — causal inference library', url:'https://github.com/py-why/dowhy', why:'Explicit causal-assumption modeling: DAGs, identification, and refutation tests'}
-        ]},
-      {n:4, focus:'Regulated AI Systems: LLMs, Generative Models & Agentic AI', detail:'Foundation-model and agentic approaches for scientific workflows, built to hold up under regulatory scrutiny',
-        subtopics:['LLM-based scientific workflow assistants','Generative models for representation learning & hypothesis generation','Agentic AI (assistive, automated, sentinel) system design','Model validation, interpretability & reproducibility in regulated (GxP) environments'],
-        links:[]}
-    ],
-    project: 'Take a public clinical/multi-omic dataset (e.g. TCGA or a public trial biomarker set), integrate 2+ omic layers with MOFA2, then build a prognostic model (survival or response endpoint) with an explicit baseline, a causal-adjustment step (propensity or DAG-based), and a short interpretability + limitations write-up as if presenting to biostatisticians and clinicians.',
-    readings: [
-      'MOFA+ paper (Argelaguet et al.) — statistical framework for multi-modal integration',
-      'DoWhy documentation — the 4-step causal inference workflow (model, identify, estimate, refute)',
-      'lifelines documentation — survival analysis fundamentals for time-to-event endpoints'
-    ],
-    milestone: 'A biomarker model on real multi-omic + clinical data beats a defined baseline, includes an explicit causal-adjustment step, and is documented well enough for a non-ML scientific audience',
-    interviewPrep: [
-      {q:'What is the difference between a predictive and a prognostic biomarker, in one sentence each — and why does mixing them up matter for trial design?', p:'high'},
-      {q:'Why can MOFA-style latent factors be more interpretable than a black-box multimodal neural net for biomarker discovery, and what do you give up?', p:'high'},
-      {q:'Walk through the four steps of DoWhy\'s causal workflow and explain what a refutation test is actually checking.', p:'high'},
-      {q:'If your survival model has a great C-index but poor calibration, what does that tell a clinician — and would you still ship it?', p:'high'},
-      {q:'You find a biomarker significantly associated with response in a retrospective analysis — what has to be true before you\'d recommend it for prospective patient selection?', p:'high'},
-      {q:'How would you explain a complex multi-omic model\'s prediction to a clinician who doesn\'t trust black boxes?', p:'high'}
-    ]
+    milestone: 'Capstone pipeline runs end-to-end and is reproducible from a clean environment'
   },
   {
     id: 5, accent: 'var(--m5)', isCapstone: true, title: 'Capstone Project',
     tagline: 'Ship one real, reproducible, end-to-end pipeline.',
-    whyRead: 'Everything before this chapter is practice; the capstone is proof. Interviewers and hiring managers weight one real, documented, end-to-end project far more heavily than a long list of completed tutorials — this is the thing you\'ll actually talk through, link to, and defend under follow-up questions, so it deserves more care than any single module that came before it.',
-    keyTheme: 'Your "walk me through a project" answer — for most technical-round interviews, this project literally IS the interview.',
     weeks: [
       {n:17, focus:'Scope the Pipeline', detail:'Pick your target model and sketch the DAG before writing any orchestration code',
         subtopics:['Problem scoping','Choosing input model (structure, inverse folding, or variant-effect)','DAG / stage design','Input & output format spec'],
@@ -738,15 +463,8 @@ const DATA = [
       'Nextflow / Snakemake official docs — orchestration reference (see Month 4, Week 15)',
       'nf-core pipeline conventions — how production-grade bioinformatics pipelines are structured and tested'
     ],
-    milestone: 'Pipeline runs end-to-end on a clean machine or container and produces documented, ranked output — ready to demo',
-    interviewPrep: [
-      {q:'Walk me through your pipeline end to end — what happens at each stage, and why did you split it that way?', p:'high'},
-      {q:'What would break first if this pipeline received 100x the input data, and how would you fix it?', p:'med'},
-      {q:'What did you baseline against, and what would convince you the model stage wasn\'t actually adding value?', p:'high'},
-      {q:'What are the concrete limitations of your pipeline, and what would you build next to address them?', p:'high'},
-      {q:'If you had to hand this pipeline off to someone else tomorrow, what\'s missing that would block them?', p:'med'}
-    ]
-  },
+    milestone: 'Pipeline runs end-to-end on a clean machine or container and produces documented, ranked output — ready to demo'
+  }
 ];
 
 const STORAGE_KEY = 'bioinfo-tracker-v1';
@@ -789,22 +507,6 @@ function monthTaskIds(m){
   ids.push(taskId(m.id,'project',0));
   ids.push(taskId(m.id,'milestone',0));
   return ids;
-}
-
-function renderPriorityMap(){
-  const list = document.getElementById('priorityList');
-  if(!list) return;
-  list.innerHTML = DATA.map(m=>{
-    const label = m.isCapstone ? 'Capstone' : (m.isCloud ? m.title : (m.isParallel ? 'AI Engineering' : (m.isIndustry ? m.title : (m.isStats ? m.title : `Month ${m.id} · ${m.title}`))));
-    return `
-    <div class="priority-row${m.topPriority ? ' top' : ''}">
-      <div class="priority-dot" style="background:${m.accent}"></div>
-      <div class="priority-row-text">
-        <div class="priority-row-name">${label}${m.topPriority ? '<span class="top-tag">Top priority</span>' : ''}</div>
-        <div class="priority-row-theme">${m.keyTheme || ''}</div>
-      </div>
-    </div>`;
-  }).join('');
 }
 
 function renderKaryo(){
@@ -879,12 +581,12 @@ function renderMonths(){
     const projectId = taskId(m.id,'project',0);
     const milestoneId = taskId(m.id,'milestone',0);
 
-    const numLabel = m.isCapstone ? '★' : (m.isCloud ? '☁' : (m.isParallel ? '⚙' : (m.isIndustry ? '⬡' : (m.isStats ? '∑' : String(m.id).padStart(2,'0')))));
-    const chapterLabel = m.isCapstone ? `Final Chapter · ${m.tagline}` : (m.isCloud ? `Parallel Track · ${m.tagline}` : (m.isParallel ? `Parallel Track · ${m.tagline}` : (m.isIndustry ? `Industry-Aligned · ${m.tagline}` : (m.isStats ? `Foundations · ${m.tagline}` : `Month ${m.id} · ${m.tagline}`))));
-    const badge = m.isCapstone ? '<span class="capstone-badge">Capstone</span>' : (m.isCloud ? '<span class="cloud-badge">Cloud &amp; Networking</span>' : (m.isParallel ? '<span class="parallel-badge">Ongoing</span>' : (m.isIndustry ? '<span class="industry-badge">Role-Aligned</span>' : (m.isStats ? '<span class="stats-badge">Core Stats</span>' : ''))));
+    const numLabel = m.isCapstone ? '★' : (m.isParallel ? '⚙' : String(m.id).padStart(2,'0'));
+    const chapterLabel = m.isCapstone ? `Final Chapter · ${m.tagline}` : (m.isParallel ? `Parallel Track · ${m.tagline}` : `Month ${m.id} · ${m.tagline}`);
+    const badge = m.isCapstone ? '<span class="capstone-badge">Capstone</span>' : (m.isParallel ? '<span class="parallel-badge">Ongoing</span>' : '');
 
     return `
-    <div class="month${m.isCapstone ? ' capstone' : ''}${m.isParallel ? ' parallel' : ''}${m.isIndustry ? ' industry' : ''}${m.isStats ? ' stats' : ''}${m.isCloud ? ' cloud' : ''}" data-month="${m.id}" style="--accent:${m.accent}">
+    <div class="month${m.isCapstone ? ' capstone' : ''}${m.isParallel ? ' parallel' : ''}" data-month="${m.id}" style="--accent:${m.accent}">
       <div class="month-head">
         <div class="month-num">${numLabel}</div>
         <div class="month-titles">
@@ -896,11 +598,6 @@ function renderMonths(){
       </div>
       <div class="month-body">
         <div class="month-body-inner">
-          ${m.whyRead ? `
-          <div class="why-read">
-            <span class="k">Why this chapter matters</span>
-            <p>${m.whyRead}</p>
-          </div>` : ''}
           <div class="section-label">Weekly Focus</div>
           ${weekRows}
           <div class="section-label">Project</div>
@@ -914,24 +611,15 @@ function renderMonths(){
           </div>
           <div class="section-label">Reading</div>
           ${readingRows}
-          <div class="section-label">Definition of Done</div>
+          <div class="section-label">Milestone</div>
           <div class="milestone-card">
-            <span class="k">You're done with this chapter when</span>
+            <span class="k">You're done with this month when</span>
             <p>${m.milestone}</p>
           </div>
           <div class="row${state[milestoneId] ? ' checked' : ''}" data-id="${milestoneId}">
             <div class="box"><svg viewBox="0 0 16 16" fill="none"><path d="M2 8l4 4 8-8" stroke="#0A1412" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-            <div class="row-text"><div class="row-title">Mark Definition of Done reached</div></div>
+            <div class="row-text"><div class="row-title">Mark milestone reached</div></div>
           </div>
-          ${(m.interviewPrep && m.interviewPrep.length) ? `
-          <div class="section-label">Interview Prep</div>
-          <div class="interview-card">
-            <span class="k">Be able to answer these cold</span>
-            <div class="interview-legend"><span class="signal-badge" style="position:static;">Frequently asked</span> = highest-signal, prioritize these first</div>
-            <ul class="interview-list">
-              ${[...m.interviewPrep].sort((a,b)=> (a.p==='high'?0:1) - (b.p==='high'?0:1)).map(item=>`<li>${item.p==='high' ? '<span class="signal-badge">Frequently asked</span>' : ''}${item.q}</li>`).join('')}
-            </ul>
-          </div>` : ''}
         </div>
       </div>
     </div>`;
@@ -1004,7 +692,6 @@ document.getElementById('resetBtn').addEventListener('click', async ()=>{
   await loadState();
   renderKaryo();
   renderMonths();
-  renderPriorityMap();
   note.textContent = 'progress saves automatically as you check items off';
 })();
 </script>
