@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>GenAI → Bioinformatics :: Progress Tracker</title>
+<title>GenAI → Bioinformatics :: Progress Tracker (Industry-Aligned)</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700;800&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
@@ -21,6 +21,10 @@
     --m4: #E0673F;
     --m5: #F2C94C;
     --eng: #8AA6FF;
+    --amgen: #B15CC7;
+    --stats: #7C93B3;
+    --cloud: #6C63FF;
+    --ngs: #2FA5D9;
   }
   *{box-sizing:border-box; margin:0; padding:0;}
   body{
@@ -113,6 +117,11 @@
   .month-titles{flex:1;}
   .month-titles .label{font-family:'JetBrains Mono', monospace; font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:var(--muted); margin-bottom:3px;}
   .month-titles .name{font-weight:600; font-size:16.5px;}
+  .month-hours{
+    font-family:'JetBrains Mono', monospace; font-size:10.5px; letter-spacing:.05em;
+    color:var(--muted); background:rgba(255,255,255,0.04); border:1px solid var(--border);
+    padding:2px 8px; border-radius:10px; white-space:nowrap; flex-shrink:0;
+  }
   .month-progress{
     font-family:'JetBrains Mono', monospace; font-size:13px; color:var(--muted); min-width:56px; text-align:right;
   }
@@ -168,6 +177,53 @@
     font-size:12px; color:var(--text); background:rgba(255,255,255,0.05);
     border:1px solid var(--border); padding:3px 9px; border-radius:20px;
   }
+
+  /* ---------- Depth / scope guidance per subtopic ---------- */
+  details.depth{margin-top:10px; margin-left:30px;}
+  .depth-list{display:flex; flex-direction:column; gap:7px; margin-top:8px;}
+  .depth-total{
+    font-family:'JetBrains Mono', monospace; font-size:10.5px; letter-spacing:.06em; text-transform:uppercase;
+    color:var(--muted); display:flex; align-items:center; gap:8px;
+    cursor:pointer; list-style:none; user-select:none;
+    border:1px dashed var(--border); border-radius:7px; padding:5px 10px;
+    background:rgba(255,255,255,0.015); transition:border-color .15s, color .15s, background .15s;
+  }
+  .depth-total::-webkit-details-marker{display:none;}
+  .depth-total:hover{color:var(--text); border-color:var(--accent); background:rgba(255,255,255,0.035);}
+  .depth-total b{color:var(--accent); font-weight:700;}
+  .depth-total .caret{
+    color:var(--accent); font-size:9px; flex-shrink:0;
+    transition:transform .18s ease; transform:rotate(0deg);
+  }
+  details.depth[open] > .depth-total{
+    border-style:solid; border-color:var(--accent); color:var(--text);
+    border-bottom-left-radius:0; border-bottom-right-radius:0;
+  }
+  details.depth[open] > .depth-total .caret{transform:rotate(90deg);}
+  .depth-total .count{margin-left:auto; opacity:.75; flex-shrink:0;}
+  .depth-row{
+    background:rgba(255,255,255,0.022);
+    border:1px solid var(--border);
+    border-left:2px solid var(--accent);
+    border-radius:0 7px 7px 0;
+    padding:8px 11px;
+  }
+  .depth-head{display:flex; justify-content:space-between; align-items:baseline; gap:10px;}
+  .depth-topic{font-weight:600; font-size:13px; color:var(--text);}
+  .depth-hours{
+    font-family:'JetBrains Mono', monospace; font-size:10.5px; color:var(--muted);
+    background:rgba(255,255,255,0.05); border:1px solid var(--border);
+    padding:1px 7px; border-radius:10px; white-space:nowrap; flex-shrink:0;
+  }
+  .depth-learn, .depth-skip{font-size:12.5px; line-height:1.5; margin-top:4px;}
+  .depth-learn{color:var(--text);}
+  .depth-skip{color:var(--muted);}
+  .depth-learn .lbl, .depth-skip .lbl{
+    font-family:'JetBrains Mono', monospace; font-size:9.5px; letter-spacing:.07em; text-transform:uppercase;
+    padding:1px 5px; border-radius:4px; margin-right:6px; font-weight:700;
+  }
+  .depth-learn .lbl{color:#08221B; background:var(--m1);}
+  .depth-skip .lbl{color:#2A1206; background:var(--m4);}
   .study-links{
     margin-top:10px; margin-left:30px; padding-top:8px; border-top:1px dashed var(--border);
   }
@@ -197,6 +253,74 @@
     color:var(--accent); margin-bottom:6px; display:block;
   }
   .project-card p{font-size:14px; color:var(--text);}
+  .interview-card{
+    background:var(--surface-2); border:1px dashed var(--border);
+    border-radius:10px; padding:14px 16px; margin-bottom:8px;
+  }
+  .interview-card .k{
+    font-family:'JetBrains Mono', monospace; font-size:11px; letter-spacing:.08em; text-transform:uppercase;
+    color:var(--accent); margin-bottom:8px; display:block;
+  }
+  .interview-list{list-style:none; display:flex; flex-direction:column; gap:7px;}
+  .interview-list li{
+    font-size:13.5px; color:var(--text); padding-left:16px; position:relative; line-height:1.45;
+  }
+  .interview-list li::before{
+    content:'?'; position:absolute; left:0; top:0; color:var(--accent); font-family:'JetBrains Mono', monospace; font-weight:700; font-size:12px;
+  }
+  .signal-badge{
+    display:inline-block; font-family:'JetBrains Mono', monospace; font-size:9.5px; letter-spacing:.06em; text-transform:uppercase;
+    color:#1A1508; background:var(--m5); padding:1px 6px; border-radius:10px; margin-right:7px; font-weight:700;
+    position:relative; top:-1px;
+  }
+  .interview-legend{
+    font-size:11.5px; color:var(--muted); margin-bottom:10px; display:flex; align-items:center; gap:6px;
+  }
+  .priority-card{
+    background:var(--surface); border:1px solid var(--border); border-radius:14px;
+    padding:20px 22px; margin-bottom:20px;
+  }
+  .priority-card-top{display:flex; justify-content:space-between; align-items:baseline; margin-bottom:14px; flex-wrap:wrap; gap:8px;}
+  .priority-card-top h2{font-family:'JetBrains Mono', monospace; font-size:14px; font-weight:700; letter-spacing:-0.01em;}
+  .priority-card-sub{font-size:12.5px; color:var(--muted);}
+  .priority-list{display:flex; flex-direction:column; gap:10px;}
+  .priority-row{
+    display:flex; align-items:flex-start; gap:12px; padding:10px 12px; border-radius:9px;
+    background:var(--surface-2); border:1px solid var(--border);
+  }
+  .priority-row.top{border-color: rgba(242,201,76,0.4);}
+  .priority-dot{width:10px; height:10px; border-radius:3px; margin-top:4px; flex-shrink:0;}
+  .priority-row-text{flex:1;}
+  .priority-row-name{font-weight:600; font-size:13.5px; display:flex; align-items:center; gap:8px; margin-bottom:2px;}
+  .priority-row-theme{font-size:13px; color:var(--muted); line-height:1.4;}
+  .top-tag{
+    font-family:'JetBrains Mono', monospace; font-size:9px; letter-spacing:.07em; text-transform:uppercase;
+    color:#1A1508; background:var(--m5); padding:1px 7px; border-radius:10px; font-weight:700;
+  }
+  .why-read{
+    border-left: 3px solid var(--accent);
+    background: var(--surface-2);
+    border-radius: 0 10px 10px 0;
+    padding: 12px 16px;
+    margin: 4px 0 20px;
+  }
+  .why-read .k{
+    font-family:'JetBrains Mono', monospace; font-size:10.5px; letter-spacing:.08em; text-transform:uppercase;
+    color:var(--accent); margin-bottom:5px; display:block;
+  }
+  .why-read p{font-size:13.5px; color:var(--text); line-height:1.55;}
+
+  .pacing-note{
+    border:1px solid rgba(224,103,63,0.35);
+    background: linear-gradient(180deg, rgba(224,103,63,0.07), var(--surface) 70%);
+    border-radius:12px; padding:14px 18px; margin:0 0 28px;
+  }
+  .pacing-note .k{
+    font-family:'JetBrains Mono', monospace; font-size:10.5px; letter-spacing:.08em; text-transform:uppercase;
+    color:var(--m4); margin-bottom:6px; display:block;
+  }
+  .pacing-note p{font-size:13.5px; color:var(--text); line-height:1.6;}
+  .pacing-note strong{color:var(--m5); font-weight:600;}
 
   .month.capstone{border-color: rgba(242,201,76,0.35); background: linear-gradient(180deg, rgba(242,201,76,0.05), var(--surface) 60%);}
   .month.parallel{border-color: rgba(138,166,255,0.35); background: linear-gradient(180deg, rgba(138,166,255,0.06), var(--surface) 60%);}
@@ -208,6 +332,30 @@
   .parallel-badge{
     font-family:'JetBrains Mono', monospace; font-size:10px; letter-spacing:.1em; text-transform:uppercase;
     color:#0E1530; background:var(--eng); padding:2px 8px; border-radius:20px; margin-left:8px; font-weight:700;
+    vertical-align:middle;
+  }
+  .month.industry{border-color: rgba(177,92,199,0.35); background: linear-gradient(180deg, rgba(177,92,199,0.06), var(--surface) 60%);}
+  .industry-badge{
+    font-family:'JetBrains Mono', monospace; font-size:10px; letter-spacing:.1em; text-transform:uppercase;
+    color:#FBF2FC; background:var(--amgen); padding:2px 8px; border-radius:20px; margin-left:8px; font-weight:700;
+    vertical-align:middle;
+  }
+  .month.stats{border-color: rgba(124,147,179,0.35); background: linear-gradient(180deg, rgba(124,147,179,0.06), var(--surface) 60%);}
+  .stats-badge{
+    font-family:'JetBrains Mono', monospace; font-size:10px; letter-spacing:.1em; text-transform:uppercase;
+    color:#101820; background:var(--stats); padding:2px 8px; border-radius:20px; margin-left:8px; font-weight:700;
+    vertical-align:middle;
+  }
+  .month.cloud{border-color: rgba(108,99,255,0.35); background: linear-gradient(180deg, rgba(108,99,255,0.07), var(--surface) 60%);}
+  .cloud-badge{
+    font-family:'JetBrains Mono', monospace; font-size:10px; letter-spacing:.1em; text-transform:uppercase;
+    color:#F1F0FF; background:var(--cloud); padding:2px 8px; border-radius:20px; margin-left:8px; font-weight:700;
+    vertical-align:middle;
+  }
+  .month.ngs{border-color: rgba(47,165,217,0.35); background: linear-gradient(180deg, rgba(47,165,217,0.07), var(--surface) 60%);}
+  .ngs-badge{
+    font-family:'JetBrains Mono', monospace; font-size:10px; letter-spacing:.1em; text-transform:uppercase;
+    color:#08222B; background:var(--ngs); padding:2px 8px; border-radius:20px; margin-left:8px; font-weight:700;
     vertical-align:middle;
   }
   .footer{
@@ -234,7 +382,12 @@
 
   <div class="eyebrow">Learning Path Tracker</div>
   <h1>GenAI Engineer → Bioinformatics</h1>
-  <p class="sub">A 4-month roadmap from transformers &amp; diffusion models to protein structure, genomic foundation models, and drug-discovery pipelines. Progress saves automatically.</p>
+  <p class="sub">A roadmap from transformers &amp; diffusion models to protein structure, genomic foundation models, and drug-discovery pipelines — extended with sequencing-data literacy (R/Bioconductor), statistical genetics, clinical trial foundations, cheminformatics, cloud/networking fundamentals, and a translational biomarker &amp; clinical-AI track aligned to industry roles. Each chapter includes a Definition of Done and interview-prep questions. Progress saves automatically.</p>
+
+  <div class="pacing-note">
+    <span class="k">Read this first · honest pacing</span>
+    <p>Summing the per-topic hour estimates gives <strong>≈350 h of core work + ≈75 h across the two parallel tracks ≈ 425 h total</strong>. At ~10 focused hrs/week that is <strong>35 weeks ≈ 8 months</strong> for the core sequence — so the original month labels are kept for continuity, but treat each as a chapter you finish, not a calendar month you survive. The two <strong>parallel tracks</strong> (AI Engineering, Cloud) are drip-fed alongside the core chapters, not done up front. Units are sized to fit one week each: where a topic ran long it is split (<strong>5 / 5b</strong>, <strong>14a / 14b / 14c</strong>), so no unit exceeds ~12 h. If you are time-boxed and targeting a specific role, the shortest defensible path is: <strong>Chapter 1 → 2 → Sequencing Data → Statistical Genetics → Translational Biomarker → Capstone</strong>, treating Genomic FMs and Drug Discovery as read-only depth you can discuss but haven't built.</p>
+  </div>
 
   <div class="karyo-card">
     <div class="karyo-top">
@@ -244,12 +397,24 @@
     <div class="karyo-track" id="karyoTrack"></div>
     <div class="karyo-legend">
       <div class="legend-item"><span class="legend-dot" style="background:var(--eng)"></span>AI Engineering (parallel)</div>
+      <div class="legend-item"><span class="legend-dot" style="background:var(--cloud)"></span>Cloud Fundamentals (parallel)</div>
       <div class="legend-item"><span class="legend-dot" style="background:var(--m1)"></span>Month 1 · Foundations</div>
       <div class="legend-item"><span class="legend-dot" style="background:var(--m2)"></span>Month 2 · Protein AI</div>
+      <div class="legend-item"><span class="legend-dot" style="background:var(--ngs)"></span>Sequencing Data &amp; R/Bioconductor</div>
       <div class="legend-item"><span class="legend-dot" style="background:var(--m3)"></span>Month 3 · Genomic FMs</div>
+      <div class="legend-item"><span class="legend-dot" style="background:var(--stats)"></span>Statistical Genetics &amp; Clinical Trials</div>
       <div class="legend-item"><span class="legend-dot" style="background:var(--m4)"></span>Month 4 · Drug Discovery</div>
+      <div class="legend-item"><span class="legend-dot" style="background:var(--amgen)"></span>Translational Biomarker &amp; Clinical AI</div>
       <div class="legend-item"><span class="legend-dot" style="background:var(--m5)"></span>Capstone Project</div>
     </div>
+  </div>
+
+  <div class="priority-card">
+    <div class="priority-card-top">
+      <h2>Interview Priority Map</h2>
+      <span class="priority-card-sub">If you only have 10 minutes before the call, read this</span>
+    </div>
+    <div class="priority-list" id="priorityList"></div>
   </div>
 
   <div id="months"></div>
@@ -266,27 +431,49 @@ const DATA = [
   {
     id: 0, accent: 'var(--eng)', isParallel: true, unitLabel: 'Skill', title: 'AI Engineering for Bio Models',
     tagline: 'Run this alongside Months 1–4 — the production skills that turn notebooks into deployed systems.',
+    whyRead: 'A model that only runs in a notebook has almost no value to an employer. Every role this roadmap targets — research scientist, ML engineer, computational biologist — eventually needs you to hand off, scale, or maintain what you build. This chapter is the difference between "I trained a model once" and "you can trust me to own a model in production," and that distinction is exactly what separates junior from mid-level candidates in interviews.',
+    keyTheme: 'LoRA/PEFT vs. full fine-tuning trade-offs, and how you\'d detect model drift in production — the standard MLOps screening questions.',
     weeks: [
       {n:'A', focus:'Experiment Tracking & Reproducibility', detail:'Track every run and version your data/configs so results are re-creatable months later',
-        subtopics:['Experiment tracking (W&B/MLflow)','Config & seed management','Dataset versioning (DVC)','Environment version-locking'],
+        subtopics:[
+          {t:'Experiment tracking (W&B/MLflow)', h:2, d:'Pick one and use it for real on a live run rather than reading about both. Log hyperparameters, metrics, and the git commit for every run, so any number you report can be traced back to the exact code that produced it. In regulated biotech this is not optional polish — it is the difference between a result that can be defended and one that cannot.', s:'Tool comparisons and the hosted-vs-self-hosted debate. You need one working workflow.'},
+          {t:'Config & seed management', h:2, d:'Move hyperparameters out of code into config files (Hydra or plain YAML), and seed every source of randomness — Python, NumPy, torch, and the DataLoader workers. Then learn the honest caveat: seeding does not guarantee bit-identical results across GPU/cuDNN versions, so "reproducible" means documented and re-derivable, not identical to the last digit. Say it that way in an interview.', s:'Deep Hydra features like multirun sweeps until you actually need them.'},
+          {t:'Dataset versioning (DVC)', h:2, d:'Understand the core idea — content-hashed pointers committed to git, bytes stored elsewhere — and version one real dataset end to end. This matters much more in bio than in typical ML, because reference genomes, annotation releases, and cohort freezes all change under you, and an unversioned dataset makes a result permanently unreproducible.', s:'DVC pipelines/DAGs. Your workflow engine (Chapter 8) already handles orchestration.'},
+          {t:'Environment version-locking', h:2, d:'Lock the environment, not just the top-level dependencies: pinned versions, a lockfile, and ideally a container digest. Bioinformatics stacks are notoriously brittle, and "it worked last month" is the standard failure. Pair this with Chapter 8 containerization — the same discipline at two levels.', s:'Building your own base images from scratch.'}
+        ],
         links:[
           {label:'Weights & Biases — official documentation', url:'https://docs.wandb.ai/', why:'Experiment tracking, model registry, and evaluation tooling'},
           {label:'MLflow — official documentation', url:'https://mlflow.org/docs/latest/index.html', why:'Open-source alternative for tracking + model registry'}
         ]},
       {n:'B', focus:'Efficient Fine-Tuning', detail:'Parameter-efficient fine-tuning so you can adapt large protein/genomic models without full retraining',
-        subtopics:['LoRA / QLoRA','PEFT (Parameter-Efficient Fine-Tuning)','Mixed-precision training','Gradient checkpointing under limited GPU memory'],
+        subtopics:[
+          {t:'LoRA / QLoRA', h:3, d:'Know the mechanism well enough to explain it on a whiteboard: freeze the base weights, learn a low-rank update B·A alongside them, and merge at inference. Understand what rank and alpha actually control, and that QLoRA adds a 4-bit quantized frozen base to fit larger models on one GPU. This is the default way anyone adapts ESM-2 or Evo 2 on a realistic budget, so it comes up constantly.', s:'The full derivation and the paper\'s ablation tables. Mechanism plus practical knobs is the bar.'},
+          {t:'PEFT (Parameter-Efficient Fine-Tuning)', h:3, d:'Get hands-on with the HuggingFace PEFT library and actually fine-tune a small protein or DNA model, even on a toy task. The specific thing to internalize is which layers to target for a transformer encoder like ESM-2 (attention projections) and what a sane adapter budget looks like. Also learn when full fine-tuning of a small model beats PEFT on a large one — often, when your labelled dataset is tiny, which in biology it usually is.', s:'Cataloguing every PEFT variant (prefix tuning, IA3, adapters). LoRA is the one in production use.'},
+          {t:'Mixed-precision training', h:2, d:'bf16 versus fp16 and why bf16 is preferred when the hardware supports it — same exponent range as fp32, so no loss-scaling gymnastics. Learn to spot the failure signature (NaN loss a few hundred steps in) and its usual causes. You will be memory-bound on long genomic contexts, so this is a practical necessity rather than an optimization.', s:'Manual GradScaler tuning; use the framework autocast path.'},
+          {t:'Gradient checkpointing under limited GPU memory', h:2, d:'The core trade: recompute activations during backward instead of storing them, buying large memory savings for roughly 20–30% more compute time. Learn the actual toolkit for fitting a model — batch size, gradient accumulation, checkpointing, and sequence length — and know that on genomic models sequence length is usually the dominant term. Being able to reason out loud about fitting a 100kb-context model on an A100 is a very common interview probe.', s:'Custom checkpoint-partitioning strategies and full DeepSpeed/FSDP configuration.'}
+        ],
         links:[
           {label:'Hugging Face PEFT — official repo', url:'https://github.com/huggingface/peft', why:'Reference implementation of LoRA/QLoRA and other PEFT methods'},
           {label:'Transformers × PEFT integration guide', url:'https://huggingface.co/docs/transformers/en/peft', why:'Attach LoRA adapters directly to a Transformers model'}
         ]},
       {n:'C', focus:'Model Serving & Inference Optimization', detail:'Serve large bio-foundation models efficiently — quantization, batching, and GPU memory management',
-        subtopics:['Quantization (int8/fp8)','KV-cache & continuous batching','High-throughput serving','GPU memory profiling for long-context models'],
+        subtopics:[
+          {t:'Quantization (int8/fp8)', h:2, d:'Post-training quantization versus quantization-aware training, and the practical rule that int8 is usually near-free in quality while int4 needs measurement. The bio-specific point worth making: always re-validate on your actual biological benchmark after quantizing, because a 1% average drop can hide a much larger drop on the rare variants or rare cell types you actually care about.', s:'Kernel-level implementation details of GPTQ/AWQ.'},
+          {t:'KV-cache & continuous batching', h:2, d:'Understand why the KV cache exists (avoid recomputing attention over the prefix) and that its size grows linearly in sequence length — which is why long genomic contexts blow up memory at inference, not just training. Continuous batching then keeps the GPU busy by swapping finished sequences out mid-batch. Be able to explain both in two sentences each.', s:'PagedAttention internals; know the concept, not the implementation.'},
+          {t:'High-throughput serving', h:3, d:'Do one real deployment — a protein or DNA model behind an endpoint — and measure it: latency, throughput, and cost per thousand sequences. Then learn the framing that actually matters for bio workloads: most are batch scoring (score 10 million variants overnight), not low-latency serving, and batch is far cheaper. Knowing which regime you are in, and saying so, reads as genuine production experience.', s:'Autoscaling, multi-region, and canary deploys. Out of scope for a portfolio.'},
+          {t:'GPU memory profiling for long-context models', h:2, d:'Learn to read a memory profile and attribute usage to weights, activations, KV cache, and optimizer state, then estimate a model\'s footprint on paper before renting the GPU. This is the highest-leverage skill of the week: a back-of-envelope estimate that says "this needs 2× A100 80GB, here is the arithmetic" is exactly what senior interviewers listen for.', s:'Writing custom CUDA memory allocators.'}
+        ],
         links:[
           {label:'vLLM — official documentation', url:'https://docs.vllm.ai/en/latest/', why:'High-throughput inference/serving engine; relevant for long-context models like Evo 2'},
           {label:'vLLM — official repo', url:'https://github.com/vllm-project/vllm', why:'Source, supported models, and quantization backends'}
         ]},
       {n:'D', focus:'Evaluation & Monitoring', detail:'Build rigorous held-out benchmarks and carry the baseline-beating discipline through to production',
-        subtopics:['Held-out benchmark design','Baseline comparison rigor (see Core Principle #1)','Model cards & documentation','Production monitoring & drift detection'],
+        subtopics:[
+          {t:'Held-out benchmark design', h:3, d:'The most important topic in this chapter. Learn the leakage modes that are specific to biology and invisible to a standard train/test split: sequence-homology leakage in proteins, scaffold leakage in molecules (Chapter 4), related-individual leakage in genetics (Chapter 7), and batch or site leakage in clinical cohorts. The remedy is always a split along the axis you must generalize across — sequence-identity clustering, scaffold split, relatedness pruning, leave-one-site-out.', s:'Nothing. A wrong split invalidates every downstream number, and interviewers probe this deliberately.'},
+          {t:'Baseline comparison rigor (see Core Principle #1)', h:2, d:'Always report a dumb baseline alongside the model: BLAST or nearest-neighbour for sequence tasks, a linear or logistic model on obvious features for tabular ones, and the majority class for imbalanced problems. Report confidence intervals, not point estimates. The habit to build is asking "compared to what, and is the gap larger than the noise" before believing your own result.', s:'Formal statistical-testing machinery for model comparison at this stage.'},
+          {t:'Model cards & documentation', h:2, d:'Read one real model card, then write one for your own model: intended use, training data and its known biases, evaluation results with the split described, limitations, and out-of-scope uses. In pharma this crosses into regulated territory — documented intended use and known limitations is what makes a model auditable, which links directly to the GxP material in Chapter 6.', s:'Full regulatory submission templates.'},
+          {t:'Production monitoring & drift detection', h:2, d:'Monitor inputs, not just outputs: distribution shift on incoming data is usually detectable long before performance degradation is, and in bio the shift is often a new assay version, a new sequencing platform, or a new reference annotation release. Decide in advance what triggers a retrain and who is accountable for the decision.', s:'Building a monitoring platform. Understand the signals and the trigger policy.'}
+        ],
         links:[
           {label:'Weights & Biases — Evaluations & observability', url:'https://docs.wandb.ai/', why:'Same platform, used here for eval tracking rather than training logs'}
         ]}
@@ -297,32 +484,133 @@ const DATA = [
       'vLLM documentation — high-throughput model serving',
       'Weights & Biases documentation — experiment tracking and evaluation'
     ],
-    milestone: 'A model from an earlier month is tracked, fine-tuned efficiently, and served behind a benchmarked inference endpoint'
+    milestone: 'A model from an earlier month is tracked, fine-tuned efficiently, and served behind a benchmarked inference endpoint',
+    interviewPrep: [
+      {q:'Why does LoRA use a low-rank update instead of fine-tuning all weights, and what does the rank actually control?', p:'high'},
+      {q:'How would you decide between full fine-tuning, LoRA, and prompt-based adaptation for a given task and compute budget?', p:'high'},
+      {q:'What breaks if you skip experiment tracking on a long-running fine-tuning job, and how would you retroactively reconstruct what happened?', p:'med'},
+      {q:'Walk through the latency vs. throughput tradeoff when batching requests in a serving engine like vLLM.', p:'high'},
+      {q:'How would you detect that a deployed model has silently drifted from its training-time performance?', p:'high'},
+      {q:'What\'s the difference between quantization-aware training and post-training quantization, and when does each fail?', p:'med'}
+    ]
+  },
+  {
+    id: 8, accent: 'var(--cloud)', isCloud: true, isParallel: true, unitLabel: 'Module', title: 'Cloud Fundamentals & Networking (AWS & Azure)',
+    tagline: 'Run this alongside everything else — the plumbing that connects every service you touch, on AWS and Azure.',
+    whyRead: 'Every model, dataset, and pipeline in this roadmap eventually has to run somewhere other than your laptop — almost always inside a company\'s AWS or Azure account. Without this chapter you can build a technically brilliant model and still freeze when asked "how would you actually deploy this?" — one of the most common questions once you move past pure research, and a near-guaranteed topic in any role touching production biomarker or genomic pipelines.',
+    keyTheme: 'The public-vs-private-subnet distinction (it\'s the route table, not the subnet itself) and the full DNS → load balancer → compute request path — both come up in almost any "how would you deploy this" systems question.',
+    weeks: [
+      {n:1, focus:'Core Networking: VPC/VNet, Subnets & Routing', detail:'The isolated network every cloud resource lives inside, and how traffic is allowed to move through it',
+        subtopics:[
+          {t:'VPC (AWS) / VNet (Azure) — the isolated network container', h:2, d:'Your own private slice of the cloud provider\'s network, with an address range you choose. Learn what lives inside it (subnets, route tables, gateways) versus what is regional or global, and that nothing enters or leaves without an explicit path you created. Everything else this week is a detail hanging off this one idea.', s:'VPC peering, Transit Gateway, and multi-account topologies.'},
+          {t:'CIDR blocks & IP addressing', h:2, d:'Be able to read /16, /24, /28 and say how many addresses each holds and whether two ranges overlap. Learn the practical sizing habit — allocate generously for the VPC, split subnets by /24 — and that the provider reserves a handful of addresses per subnet. Overlapping ranges is the classic mistake that only surfaces later when you try to connect two networks.', s:'Manual binary subnet arithmetic drills. Recognize and reason about ranges; a calculator is fine.'},
+          {t:'Public vs. private subnets (defined by the route table, not the subnet)', h:2, d:'The single most misunderstood point in cloud networking, and the reason it is called out in the title: a subnet is "public" only because its route table sends 0.0.0.0/0 to an Internet Gateway. Nothing about the subnet object itself makes it public. The pattern to internalize: compute and data in private subnets, only load balancers and bastions in public ones.', s:'Nothing. This exact distinction is a standard screening question.'},
+          {t:'Route tables', h:2, d:'Read a route table and predict where a packet goes — destination CIDR to target, most-specific match wins, with an implicit local route for in-VPC traffic. Then practise the diagnostic direction: given "my instance cannot reach the internet", the route table is the first thing you check, not the last.', s:'BGP, dynamic routing, and route propagation over VPN/Direct Connect.'},
+          {t:'Internet Gateway vs. NAT Gateway', h:2, d:'IGW allows both inbound and outbound and is what makes a subnet public; NAT allows outbound only, so private instances can pull packages while remaining unreachable from outside. Also know that NAT costs real money per GB — relevant when a genomics pipeline pulls hundreds of gigabytes of reference data, where a VPC endpoint to S3 is the cheaper answer.', s:'NAT instance (the legacy self-managed alternative) and high-availability NAT design.'}
+        ],
+        links:[
+          {label:'AWS — What is Amazon VPC?', url:'https://docs.aws.amazon.com/vpc/latest/userguide/what-is-amazon-vpc.html', why:'Official concept overview: VPCs, CIDR blocks, gateways'},
+          {label:'AWS — Subnets for your VPC', url:'https://docs.aws.amazon.com/vpc/latest/userguide/configure-subnets.html', why:'Exactly how public vs. private subnets and route tables work'},
+          {label:'Azure — Virtual networks and subnets design guide', url:'https://learn.microsoft.com/en-us/azure/networking/design-guide/vnets-subnets', why:'Azure\'s equivalent concepts (VNet, NSG) mapped against AWS terms'}
+        ]},
+      {n:2, focus:'DNS & Service Discovery', detail:'How a name becomes an address, and how traffic finds the right instance of a service',
+        subtopics:[
+          {t:'DNS resolution basics (A / CNAME / alias records)', h:2, d:'A maps a name to an IP, CNAME maps a name to another name, and an alias (AWS-specific) works like a CNAME but is allowed at the zone apex and resolves to AWS resources. Learn what TTL actually means for how long a stale answer lingers — it explains most "I changed it but it still goes to the old server" confusion.', s:'DNSSEC, zone transfers, and running your own resolver.'},
+          {t:'Route 53 (AWS) / Azure DNS', h:2, d:'Learn the hosted-zone model, how a domain gets delegated to it, and enough about health checks and simple routing policies to know they exist. Depth here is genuinely low-value for a computational biology role; recognition-level knowledge is sufficient.', s:'Weighted, latency, and geolocation routing policies.'},
+          {t:'Private DNS zones & internal service discovery', h:2, d:'How resources inside a VPC resolve each other by stable internal names instead of hard-coded private IPs — which matters because private IPs change when instances are replaced. Know that a private zone resolves only from inside the associated network, which is exactly the property you want for internal services holding sensitive data.', s:'Service-mesh discovery (Consul, Istio).'},
+          {t:'Load balancers (ALB/NLB on AWS, Azure Load Balancer) sitting in front of compute', h:2, d:'Layer 7 (ALB — HTTP-aware, path routing, TLS termination) versus layer 4 (NLB — TCP, faster, static IPs), plus target groups, health checks, and the standard topology: load balancer public, targets private. The bio-relevant nuance is that long-running inference requests can exceed the default idle timeout, which is a real and confusing failure when serving a large protein model.', s:'Sticky sessions, WAF integration, and advanced listener rules.'}
+        ],
+        links:[
+          {label:'AWS Route 53 — official documentation', url:'https://docs.aws.amazon.com/route53/', why:'DNS records, routing policies, health checks'},
+          {label:'Azure DNS — official documentation', url:'https://learn.microsoft.com/en-us/azure/dns/', why:'Public and private DNS zones on Azure'}
+        ]},
+      {n:3, focus:'Compute, Storage & IAM', detail:'The pieces that actually do the work, and who is allowed to touch them',
+        subtopics:[
+          {t:'EC2/Azure VM vs. containers (ECS/EKS/AKS)', h:2, d:'When each is the right answer, and specifically why containers dominate bioinformatics: every tool has conflicting dependencies, so per-tool images are the only sane path (the same reasoning as Chapter 8). Also learn spot/low-priority instances — genomics batch work is interruption-tolerant, and spot is often 60–90% cheaper, which is a cost argument worth being able to make out loud.', s:'Kubernetes operations. Knowing when you would reach for it is enough.'},
+          {t:'Object storage (S3/Blob) vs. block storage (EBS/Managed Disks)', h:3, d:'The most consequential topic of the week for genomics. Object storage is cheap, effectively unlimited, and accessed over HTTP with high latency; block storage is a disk attached to one machine, fast and small. Learn the storage classes and lifecycle rules, because raw FASTQ archives are exactly the case they exist for, and learn that egress out of the cloud is expensive while ingress is free — which is why you move compute to the data, not the reverse. Petabyte-scale cohorts make this a budget question, not a technical preference.', s:'Cross-region replication and multipart-upload internals.'},
+          {t:'IAM roles & policies (AWS) vs. Azure RBAC', h:3, d:'Learn the model: identity, action, resource, condition, and that a role is assumed rather than held — so compute gets a role instead of embedded keys. Read and write a basic least-privilege policy. This is the security topic most likely to be probed in a pharma interview, because patient-data access control is a legal requirement, not a best practice; be ready to say how you would scope access to a specific bucket prefix.', s:'Permission boundaries, SCPs, and cross-account trust chains.'},
+          {t:'Security Groups/NSGs — the stateful firewall layer in front of each resource', h:2, d:'Stateful means a permitted outbound request\'s response comes back automatically, so you only write the rule you intend. Security groups are allow-only with a default-deny, and can reference other security groups as sources — which is the clean way to say "only the app tier may reach the database". Contrast briefly with NACLs, which are stateless and subnet-level.', s:'NACL rule-numbering strategies; security groups are the layer you will actually use.'}
+        ],
+        links:[
+          {label:'AWS IAM — official documentation', url:'https://docs.aws.amazon.com/iam/', why:'Roles, policies, and least-privilege access patterns'},
+          {label:'Azure RBAC — official documentation', url:'https://learn.microsoft.com/en-us/azure/role-based-access-control/overview', why:'Azure\'s role-based access control model'}
+        ]},
+      {n:4, focus:'Running Bio-AI Pipelines on Cloud', detail:'Connecting everything above to the pipelines you\'ve already built in Month 4 and the Capstone',
+        subtopics:[
+          {t:'AWS Batch / Azure Batch for HPC-style, intrinsically-parallel workloads', h:3, d:'The compute model that matches genomics almost perfectly: thousands of independent jobs, each one sample or one chromosome, no inter-node communication. Learn job definitions, queues, and compute environments, and that Batch autoscales the cluster then scales it back to zero. Being able to say "this is embarrassingly parallel, so Batch on spot, not a persistent cluster" is the exact reasoning a hiring manager wants to hear.', s:'Fair-share scheduling policies and array-job edge cases.'},
+          {t:'AWS HealthOmics — managed, HIPAA-eligible genomics workflow execution', h:2, d:'Worth knowing by name and shape for pharma interviews: managed storage for genomic files, managed workflow runs accepting WDL/Nextflow/CWL, and variant/annotation stores queryable via Athena. The point to grasp is why it exists — HIPAA eligibility and a BAA with less compliance work than a hand-rolled stack. Note it is AWS-only, so treat it as a named option rather than the default answer.', s:'Hands-on implementation. Recognition and the compliance rationale are enough.'},
+          {t:'Nextflow\'s native AWS Batch executor', h:3, d:'The concrete payoff of the whole chapter: the same Nextflow pipeline you wrote locally in Chapter 8 runs on thousands of cores by changing an executor line in a config file, with no pipeline rewrite. Learn the config plumbing (queue, work directory in S3, container registry access) and the resource directives per process. Do this hands-on with a small pipeline — it is a strong, checkable portfolio claim.', s:'Fusion file system and advanced S3 work-directory tuning.'},
+          {t:'GPU instances for training/inference (P/G-series on AWS, NC/ND-series on Azure)', h:2, d:'Learn which family fits which job — G/NC-series for inference and light fine-tuning, P/ND-series for serious training — and the actual hourly costs, so you can price a run before starting it. Combine with the Chapter 0 memory-estimation skill: "this model needs 2× A100 80GB for roughly 12 hours, about $X on spot" is precisely the sentence that demonstrates production judgement.', s:'Multi-node distributed training infrastructure and cluster placement groups.'}
+        ],
+        links:[
+          {label:'Nextflow — Amazon Web Services (native AWS Batch executor)', url:'https://www.nextflow.io/docs/latest/aws.html', why:'Exactly how Nextflow submits and monitors jobs on AWS Batch'},
+          {label:'AWS Batch — official documentation', url:'https://docs.aws.amazon.com/batch/', why:'Managed batch compute — the layer Nextflow submits jobs to'},
+          {label:'Azure Batch — official documentation', url:'https://learn.microsoft.com/en-us/azure/batch/', why:'Azure\'s equivalent managed batch/HPC compute service'},
+          {label:'AWS HealthOmics — official documentation', url:'https://docs.aws.amazon.com/omics/', why:'Purpose-built managed service for genomics workflows, including native Nextflow support'}
+        ]}
+    ],
+    project: 'By hand (console or IaC), build a minimal VPC/VNet with a public and a private subnet, a NAT gateway, and a security group that only allows traffic from your own IP. Launch a small compute instance in the private subnet and reach it only through a bastion/jump host in the public subnet — so you\'ve physically built the request path a job in your Month 4/Capstone pipeline would travel.',
+    readings: [
+      'AWS VPC & Subnets documentation — core networking concepts',
+      'Azure Virtual Network design guide — Azure\'s equivalent concepts mapped to AWS terms',
+      'Nextflow AWS Batch integration docs — how a workflow engine actually talks to cloud infrastructure'
+    ],
+    milestone: 'Can draw, from memory, the full request path from "a scientist opens a URL" to "a GPU worker in a private subnet processes their data and writes results to object storage" — naming every service the request passes through',
+    interviewPrep: [
+      {q:'What actually makes a subnet "public" vs. "private" — is it a property of the subnet itself, or something else?', p:'high'},
+      {q:'Why do you need a NAT Gateway if your VPC already has an Internet Gateway?', p:'high'},
+      {q:'Walk through what happens, hop by hop, when a client resolves a domain name and connects to a service sitting behind a load balancer.', p:'high'},
+      {q:'What\'s the difference between a Security Group and a Network ACL (or an NSG vs. Azure Firewall) — which one is stateful?', p:'med'},
+      {q:'Why would you run a genomics pipeline on AWS Batch instead of just provisioning one very large EC2 instance?', p:'med'},
+      {q:'A Nextflow job submitted to AWS Batch is stuck in RUNNABLE and never executes — what are the first three things you\'d check?', p:'high'}
+    ]
   },
   {
     id: 1, accent: 'var(--m1)', title: 'Biological Foundations & Classical Bioinformatics',
     tagline: 'Learn the language of life before the algorithms that read it.',
+    whyRead: 'You cannot responsibly apply AI to biology without knowing what the data actually represents. This is exactly why so many ML engineers ship biologically nonsensical models — they optimize a loss function without understanding what a sequence, an alignment, or a fold actually means. Every later chapter in this roadmap assumes you have this foundation; skipping it means every subsequent concept is memorized rather than understood.',
+    keyTheme: 'Alignment scoring intuition (E-values, BLOSUM/PAM) — the classic "do you actually understand what BLAST is doing" filter question.',
     weeks: [
       {n:1, focus:'Central Dogma', detail:'DNA → RNA → Protein; genetic code, codon redundancy, mRNA optimization',
-        subtopics:['Transcription','Translation','Genetic code degeneracy','Codon usage bias','mRNA optimization'],
+        subtopics:[
+          {t:'Transcription', h:2, d:'The overall flow only: promoter → RNA polymerase → pre-mRNA → splicing → mature mRNA. You need to know that introns exist and are spliced out, and that one gene yields multiple isoforms — that fact matters later for RNA-seq quantification.', s:'Named transcription factors, the full eukaryotic initiation complex, and chromatin-remodelling detail. You will not be quizzed on these and they do not affect any model you build.'},
+          {t:'Translation', h:1.5, d:'Ribosome reads codons 3 at a time; tRNA brings amino acids; start/stop codons. Be able to translate a short DNA string to protein by hand once.', s:'Ribosome structural subunits, elongation factor names, and energetics per peptide bond.'},
+          {t:'Genetic code degeneracy', h:1.5, d:'That 64 codons map to 20 amino acids, so the map is many-to-one and NOT invertible. This is the single most important idea of the week — it is why protein→DNA is ambiguous and why synonymous mutations exist. Know what synonymous vs. non-synonymous means cold.', s:'Memorizing the codon table. Look it up; nobody recites it.'},
+          {t:'Codon usage bias', h:1, d:'Concept only: different organisms prefer different synonymous codons, so the "same" protein is encoded differently in E. coli vs. human. Enough to explain why codon optimization is a real engineering task.', s:'Species-specific frequency tables and CAI calculation by hand.'},
+          {t:'mRNA optimization', h:1, d:'Skim awareness only — that codon choice, GC content, and secondary structure are tuned in mRNA therapeutics/vaccines. One article is plenty.', s:'All of it beyond the concept. This is a specialty topic; do not sink time here in month 1.'}
+        ],
         links:[
           {label:'NCBI Bookshelf — Molecular Biology of the Cell (Central Dogma)', url:'https://www.ncbi.nlm.nih.gov/books/NBK26887/', why:'Free full-text chapter on DNA→RNA→protein'},
           {label:'Rosalind — DNA & RNA problems', url:'https://rosalind.info/problems/list-view/', why:'Coding problems for transcription/translation basics'}
         ]},
-      {n:2, focus:'Molecular Grounding', detail:'Proteins, nucleic acids, carbohydrates, lipids; Ramachandran plots; thermodynamics of folding',
-        subtopics:['Amino acid chemistry','Ramachandran plots','Protein folding thermodynamics','Nucleic acid structure','Lipids & carbohydrates'],
+      {n:2, focus:'Molecular Grounding', detail:'Proteins, nucleic acids, carbohydrates, lipids; Ramachandran plots; thermodynamics of folding. Textbook backing: Campbell <em>Biology</em> for breadth, Lehninger <em>Principles of Biochemistry</em> for the chemistry — read the relevant chapters only, do not work front to back.',
+        subtopics:[
+          {t:'Amino acid chemistry', h:3, d:'The 20 standard amino acids grouped by side-chain property — hydrophobic, polar, positively charged, negatively charged, plus the special cases (glycine = tiny/flexible, proline = kinks the backbone, cysteine = forms disulfide bonds). Learn the GROUPINGS and the one-letter codes, because every protein model tokenizes on those letters and every substitution matrix is organized by these chemical classes. Also know that hydrophobic residues tend to bury inward, polar/charged face solvent.', s:'Exact pKa values, full biosynthesis pathways, IUPAC nomenclature, and drawing structures from memory. You need chemical intuition, not synthesis exams — a BLOSUM matrix question tests whether you know why K→R is a conservative swap, not what arginine\'s pKa is.'},
+          {t:'Ramachandran plots', h:2, d:'What phi/psi backbone dihedral angles are, and that only certain regions are sterically allowed — which is why alpha-helix and beta-sheet dominate. This is the geometric prior AlphaFold and RFdiffusion implicitly respect, so it pays off directly in Month 2. Look at a real plot and identify the helix and sheet basins.', s:'Deriving the sterically allowed regions yourself, and the finer distinctions between plot variants per residue type.'},
+          {t:'Protein folding thermodynamics', h:2, d:'Folding is driven mainly by the hydrophobic effect and is a free-energy minimization (ΔG = ΔH − TΔS); native state is typically only marginally stable. Know that "the sequence determines the fold" is the premise the whole structure-prediction field rests on, and that marginal stability is why designed proteins so often fail experimentally.', s:'Calculating ΔG for any real system, calorimetry methods, and detailed folding-funnel kinetics theory.'},
+          {t:'Nucleic acid structure', h:1.5, d:'Double helix, antiparallel strands, A-T/G-C base pairing, 5\'→3\' directionality, and the major/minor groove existing. The antiparallel + complementary facts are load-bearing: they are exactly why reverse-complement equivariance is a sensible architectural prior in Month 3.', s:'A-form vs. Z-form DNA, detailed sugar pucker conformations, and full thermodynamic melting calculations.'},
+          {t:'Lipids & carbohydrates', h:1, d:'One pass, lowest priority in the whole month. Enough to know membranes are lipid bilayers (relevant when a target is a membrane protein) and that glycosylation is a post-translational modification that affects biologic drugs.', s:'Metabolic pathways, glycan structure nomenclature, and lipid classification trees. Genuinely safe to skim.'}
+        ],
         links:[
-          {label:'PDB-101 — Protein structure basics', url:'https://pdb101.rcsb.org/', why:'Visual, example-driven intro to structure & Ramachandran space'},
-          {label:'BSBE course syllabus (as supplied)', url:'', why:'Textbook refs: Campbell Biology, Lehninger Principles of Biochemistry'}
+          {label:'PDB-101 — Protein structure basics', url:'https://pdb101.rcsb.org/', why:'Visual, example-driven intro to structure & Ramachandran space'}
         ]},
       {n:3, focus:'Classical Algorithms', detail:'Sequence alignment (BLAST); dynamic programming (Needleman-Wunsch, Smith-Waterman)',
-        subtopics:['Global alignment (Needleman-Wunsch)','Local alignment (Smith-Waterman)','Scoring matrices (BLOSUM/PAM)','BLAST heuristics'],
+        subtopics:[
+          {t:'Global alignment (Needleman-Wunsch)', h:4, d:'Full working depth — you implement this in this week\'s project. Know the recurrence relation, the DP matrix fill, the traceback, gap penalties, and why it is O(mn). Be able to write it from a blank editor.', s:'Nothing. This is the one algorithm in the roadmap worth knowing at implementation level; it is the standard "do you actually understand DP" interview probe.'},
+          {t:'Local alignment (Smith-Waterman)', h:2, d:'The three changes from Needleman-Wunsch: clamp negative scores to zero, start traceback from the matrix maximum, end at a zero. Understand why that finds the best-scoring subsequence — and why local is the right choice when only a domain is conserved.', s:'Gotoh affine-gap optimization and SIMD/striped implementations. Know they exist, do not implement them.'},
+          {t:'Scoring matrices (BLOSUM/PAM)', h:2, d:'That these are log-odds scores from observed substitution frequencies, not arbitrary weights. Know the direction of the trick: BLOSUM62 for typical/moderately diverged searches, lower BLOSUM numbers for more diverged sequences, and that PAM derives from an evolutionary model while BLOSUM comes from conserved blocks. Tie it back to week 2 — conservative substitutions score well because the side chains are chemically similar.', s:'Deriving a matrix from scratch and the full PAM-vs-BLOSUM numbering inversion trivia beyond the one-line rule of thumb.'},
+          {t:'BLAST heuristics', h:2, d:'The seed-and-extend idea: find short exact word matches, then extend only around those — trading guaranteed optimality for a massive speedup. Plus how to read output: E-value, bit score, query coverage, percent identity.', s:'The full BLAST parameter surface and the internals of every BLAST variant. Run it, read it, move on.'}
+        ],
         links:[
           {label:'NCBI BLAST', url:'https://blast.ncbi.nlm.nih.gov/Blast.cgi', why:'Run real alignments against public sequence databases'},
           {label:'Rosalind — Alignment track', url:'https://rosalind.info/problems/list-view/', why:'Implement Needleman-Wunsch / Smith-Waterman yourself'}
         ]},
       {n:4, focus:'Consolidation + Project', detail:'Implement Needleman-Wunsch from scratch; run a BLAST search and interpret output',
-        subtopics:['E-values & bit scores','Alignment interpretation','Baseline benchmarking'],
+        subtopics:[
+          {t:'E-values & bit scores', h:2, d:'An E-value is the number of hits this good you would expect by chance in a database this size — so it depends on database size, and statistical significance is not biological significance. Bit score is database-size independent. This distinction is a very common filter question.', s:'The Karlin-Altschul derivation. Know what the statistic means and what it does not license you to claim.'},
+          {t:'Alignment interpretation', h:2, d:'Read a real BLAST hit table and judge it: high identity over a short stretch vs. moderate identity over the full length, and which is more convincing evidence of homology. Know the terms homology (shared ancestry — binary), similarity, and identity (measurable percentages), and stop using them interchangeably.', s:'Phylogenetic tree construction — that is a separate topic and is not required anywhere later in this roadmap.'},
+          {t:'Baseline benchmarking', h:3, d:'Establish the habit that carries through every later chapter: your aligner must reproduce BLAST/known-good output on test cases before you trust it. Write the comparison harness. This is Core Principle #1 in miniature — always have a dumb baseline you must beat.', s:'Nothing — this discipline is the actual transferable skill of the month, more than the algorithm itself.'}
+        ],
         links:[
           {label:'Coursera — Bioinformatics Specialization (UC San Diego)', url:'https://www.coursera.org/specializations/bioinformatics', why:'Structured course covering this whole month, free to audit'}
         ]}
@@ -332,31 +620,77 @@ const DATA = [
       'Step-by-Step Roadmap to Learning Bioinformatics — high-level orientation',
       'BSBE Department course syllabus — core topics + textbook refs (Campbell Biology, Lehninger Principles of Biochemistry)'
     ],
-    milestone: 'Custom sequence aligner matches BLAST output on test cases'
+    milestone: 'Custom sequence aligner matches BLAST output on test cases',
+    interviewPrep: [
+      {q:'Why is Smith-Waterman guaranteed to find the optimal local alignment, and what does the recurrence relation actually encode?', p:'high'},
+      {q:'What is the difference between homology, similarity, and identity — and why do people conflate them incorrectly?', p:'high'},
+      {q:'How does a BLOSUM62 matrix differ from PAM250, and when would you choose one over the other?', p:'med'},
+      {q:'What does a very low E-value actually tell you, and what does it NOT tell you about biological significance?', p:'high'},
+      {q:'Why is dynamic programming guaranteed optimal here but doesn\'t scale to full-genome alignment — what do heuristic methods like BLAST trade away?', p:'high'}
+    ]
   },
   {
     id: 2, accent: 'var(--m2)', title: 'Structural Biology & Protein AI',
     tagline: 'Where your transformer and diffusion background pays off directly.',
+    whyRead: 'This is the clearest, highest-leverage bridge between the GenAI skills you already have and biology. AlphaFold, RFdiffusion, and ProteinMPNN are among the most cited, highest-impact applications of deep learning in science — and because they reuse transformer and diffusion concepts you already know, this chapter converts existing expertise into domain credibility faster than anything else in the roadmap.',
+    keyTheme: 'AlphaFold confidence metrics (pLDDT vs. PAE) and what they do — and don\'t — tell you about correctness.',
     weeks: [
       {n:5, focus:'AlphaFold 2', detail:'Evoformer block: joint MSA + pair representation processing; Triangle Attention for geometric consistency',
-        subtopics:['Multiple sequence alignments (MSA)','Evoformer block','Triangle attention','Structure module','pLDDT / PAE confidence'],
+        subtopics:[
+          {t:'Multiple sequence alignments (MSA)', h:2.5, d:'Why an MSA is the single most important input to AF2: columns that co-evolve imply residues in physical contact, so the MSA smuggles in 3D information. Understand that MSA depth drives accuracy — and therefore that orphan proteins and de novo designs are the known failure mode. This is the highest-value concept of the week.', s:'MSA construction tool internals (HHblits/JackHMMER parameters). Treat MSA generation as a black box you consume.'},
+          {t:'Evoformer block', h:4, d:'Architecture level, since this is where your transformer background converts to credibility: two representations (MSA and pair) updated in alternating blocks with information flowing BOTH ways. Be able to sketch it and say why joint beats sequential — the pair representation is a running hypothesis about geometry, refined by evolutionary signal and vice versa.', s:'Reimplementing it, and exact per-block channel dimensions and parameter counts.'},
+          {t:'Triangle attention', h:2.5, d:'The geometric consistency argument: distances must satisfy the triangle inequality, so residues i,j,k are updated as a triple to keep the pair map physically realizable. Know it as an inductive bias baked into attention — which is the same theme that returns with equivariance in Month 3.', s:'The full multiplicative-update math. The conceptual "why" is what gets asked.'},
+        ],
         links:[
-          {label:'AlphaFold 2 — official repo (google-deepmind)', url:'https://github.com/google-deepmind/alphafold', why:'Source code + paper reference'},
-          {label:'ColabFold', url:'https://github.com/sokrypton/ColabFold', why:'Run AlphaFold-style folding for free in a browser notebook'}
+          {label:'AlphaFold 2 — official repo (google-deepmind)', url:'https://github.com/google-deepmind/alphafold', why:'Source code + paper reference'}
+        ]},
+      {n:'5b', focus:'AlphaFold 2 — Coordinates & Confidence', detail:'Turning the pair representation into 3D, and reading the confidence metrics correctly',
+        subtopics:[
+          {t:'Structure module', h:2, d:'Concept: converts the abstract pair representation into actual 3D coordinates via frames/rigid-body updates, with iterative recycling refining the answer. Know that invariant point attention and recycling exist and what recycling buys you.', s:'Quaternion/frame algebra derivations and the exact loss composition (FAPE detail).'},
+          {t:'pLDDT / PAE confidence', h:2.5, d:'Master this — it is the most commonly asked AF2 question. pLDDT is per-residue LOCAL confidence (is this bit modelled well); PAE is PAIRWISE (is domain A positioned correctly relative to domain B). So high pLDDT everywhere with bad PAE means good domains, unreliable relative placement — and pLDDT under ~50 often signals genuine intrinsic disorder rather than model failure.', s:'Nothing. Know the numeric bands and be able to interpret a real prediction cold.'}
+        ],
+        links:[
+          {label:'ColabFold', url:'https://github.com/sokrypton/ColabFold', why:'Run a real prediction free in-browser and read its pLDDT/PAE plots'}
         ]},
       {n:6, focus:'AlphaFold 3', detail:'Architectural shifts from AF2; diffusion-based structure generation',
-        subtopics:['Pairformer vs Evoformer','Diffusion module for structure','Ligand & nucleic-acid modeling'],
+        subtopics:[
+          {t:'Pairformer vs Evoformer', h:3, d:'The delta from AF2 is what matters: AF3 de-emphasizes the MSA track and leans harder on the pair representation. Be able to state the tradeoff — less MSA dependence is a step toward handling low-homology inputs, at the cost of a much less interpretable pipeline.', s:'Exhaustive per-layer diffs between AF2 and AF3. Interviewers want the direction of travel and why, not a changelog.'},
+          {t:'Diffusion module for structure', h:3, d:'AF3 replaces AF2\'s deterministic structure module with a generative diffusion process operating directly on atom coordinates — so it samples structures rather than emitting one answer, which changes how you treat its output (run multiple samples). Your existing diffusion knowledge transfers almost completely here; spend the time on the "what changes downstream" reasoning.', s:'Re-deriving DDPM math you already know from image generation.'},
+          {t:'Ligand & nucleic-acid modeling', h:2, d:'The practically important upgrade: AF3 handles complexes — protein + DNA/RNA + small-molecule ligands + ions — not just single chains. This is precisely what makes it relevant to the drug-discovery chapter, so connect the two explicitly.', s:'Full supported-ligand-type enumeration and input-format minutiae; consult docs when you actually run it.'}
+        ],
         links:[
           {label:'AlphaFold 3 — official repo', url:'https://github.com/google-deepmind/alphafold3', why:'Inference code + installation docs'},
           {label:'AlphaFold Server', url:'https://alphafoldserver.com/', why:'Run AF3 predictions in-browser, no install'}
         ]},
+      {n:'6b', focus:'Antibodies & Biologics Engineering', detail:'The therapeutic modality large-cap biotech actually ships — and the one place general protein models predictably fail',
+        subtopics:[
+          {t:'Antibody architecture & CDR loops', h:2.5, d:'Heavy/light chains, variable vs. constant domains, and the six CDR loops that do the binding. Learn the numbering schemes exist (Kabat, Chothia, IMGT) and why a canonical numbering is a prerequisite for comparing antibodies at all. This is the vocabulary of every biologics conversation — without it you cannot follow a discovery meeting.', s:'Memorizing numbering-scheme boundaries; tools handle the conversion.'},
+          {t:'Why AlphaFold underperforms on CDR-H3', h:2, d:'The single best talking point in this week. Antibody frameworks are highly conserved so models nail them, but CDR-H3 is hypervariable, has no evolutionary co-evolution signal to exploit, and is the loop that most determines specificity — so MSA-driven methods have little to work with. Specialized predictors (IgFold, ABodyBuilder) exist precisely for this. Saying "AlphaFold is not the answer for CDR-H3, and here is the mechanistic reason" demonstrates you understand the limits of the tools, not just their names.', s:'Loop-closure algorithm internals.'},
+          {t:'Humanization & immunogenicity', h:2, d:'Why a mouse-derived antibody cannot be dosed as-is, what humanization (CDR grafting onto a human framework) does, and that anti-drug antibodies are a real clinical failure mode. Know that in-silico immunogenicity prediction (MHC-II binding of peptide fragments) is an active ML application — a concrete place your modelling skills map onto a regulated decision.', s:'Wet-lab humanization protocols.'},
+          {t:'Developability prediction', h:2, d:'The industrially decisive topic: a strong binder that aggregates, has poor solubility, high viscosity at formulation concentration, or off-target polyspecificity will never become a drug. Learn the standard liability flags and that tools like the Therapeutic Antibody Profiler score candidates against clinical-stage distributions. Framing developability as a multi-objective optimization problem, not a single binding score, is exactly the systems thinking these roles screen for.', s:'Formulation chemistry and assay protocols.'},
+          {t:'Epitope/paratope prediction & newer modalities', h:2, d:'Which residues on the antigen are bound (epitope) versus which on the antibody bind (paratope), why this is a hard structural ML problem, and enough orientation on bispecifics, ADCs, and nanobodies to follow a pipeline discussion. Connect back to AF3 — multi-chain complex prediction is directly the antibody-antigen problem.', s:'Deep dives into any single modality; breadth is the goal here.'}
+        ],
+        links:[
+          {label:'IgFold — antibody structure prediction (Graylab)', url:'https://github.com/Graylab/IgFold', why:'The antibody-specific alternative to AlphaFold; fast and CDR-aware'},
+          {label:'ANARCI — antibody numbering (OPIG)', url:'https://github.com/oxpig/ANARCI', why:'Canonical Kabat/Chothia/IMGT renumbering — the preprocessing step for any antibody ML'}
+        ]},
       {n:7, focus:'Generative Structure Design', detail:'RFdiffusion — DDPMs generating 3D atomic point clouds',
-        subtopics:['Denoising diffusion probabilistic models (DDPM)','Motif scaffolding','Symmetric design','Binder design'],
+        subtopics:[
+          {t:'Denoising diffusion probabilistic models (DDPM)', h:1.5, d:'Review only if your diffusion background is solid — you already own this. Spend the hour on the one genuine difference: the data lives on SE(3) (rotations + translations of rigid residue frames), not on a pixel grid, so noising must respect that manifold.', s:'The entire standard DDPM derivation. Do not re-learn what you know; this is deliberately the cheapest item in the month for you.'},
+          {t:'Motif scaffolding', h:3, d:'The flagship real use case: you fix a functional motif (say an active site) and generate a protein that holds it in place. Understand it as conditional generation with a hard geometric constraint — the direct analogue of inpainting. Run one example.', s:'Exhaustive config-flag combinations in the repo. Get one scaffolding job working, not all of them.'},
+          {t:'Symmetric design', h:1.5, d:'Awareness plus one run if time permits: RFdiffusion can enforce cyclic/dihedral symmetry to build oligomers and nanocages, because symmetry is imposed on the denoising process itself.', s:'Point-group theory. Lowest-priority item this week.'},
+          {t:'Binder design', h:3, d:'The most commercially relevant application — generate a protein that binds a specified target epitope. Critically, learn the honest part: in-silico success rates are far below experimental hit rates, so filtering candidates (e.g. re-predicting with AF2 and checking agreement) is mandatory. This "generate then aggressively filter" pattern is the interview-worthy insight.', s:'Wet-lab validation protocols — useful context, but not something you can practice here.'}
+        ],
         links:[
           {label:'RFdiffusion — official repo (RosettaCommons)', url:'https://github.com/RosettaCommons/RFdiffusion', why:'Code, weights, and worked design examples'}
         ]},
       {n:8, focus:'Inverse Folding + Project', detail:'ProteinMPNN — proteins as geometric graphs, sequence-from-backbone design',
-        subtopics:['Graph neural nets on protein backbones','Inverse folding','Sequence recovery rate','ESMFold for validation'],
+        subtopics:[
+          {t:'Graph neural nets on protein backbones', h:3, d:'Why a graph is the right structure here: nodes are residues, edges encode local geometry (distances/orientations to k nearest neighbours), giving you built-in invariance to rotating and translating the whole protein. If GNNs are new to you, budget more — this is the one genuinely new architecture family in the month.', s:'The broad GNN literature (GAT/GraphSAGE variants). Learn message passing on this specific problem only.'},
+          {t:'Inverse folding', h:3, d:'The framing that gets asked: forward folding is sequence→structure (roughly one answer), inverse folding is structure→sequence (many valid answers, so it is a conditional generative problem over a well-defined discrete space). Know that this is why designed sequences often fold better than natural ones — you can optimize for stability rather than accept evolution\'s compromises.', s:'Rosetta\'s classical physics-based design pipeline — worth knowing exists, not worth learning now.'},
+          {t:'Sequence recovery rate', h:2, d:'The standard benchmark: how often the model recovers the native residue at each position. Understand its key weakness — a non-native residue may be equally good or better, so recovery rate under-rewards good designs. Also connect to week 2: recovery is much higher in the buried hydrophobic core than on the flexible surface.', s:'Chasing published per-dataset numbers. Understand what the metric hides.'},
+          {t:'ESMFold for validation', h:3, d:'Practical closing-the-loop skill, and the core of this week\'s project: redesign a sequence, then independently re-fold it and check the structure matches the intended backbone. Learn why ESMFold suits this (no MSA needed, so it is fast and works on designed sequences that have no homologs) and note the circularity caveat — two neural nets agreeing is weaker evidence than experiment.', s:'ESM-2 pretraining objectives and scaling-law detail.'}
+        ],
         links:[
           {label:'ProteinMPNN — official repo (dauparas)', url:'https://github.com/dauparas/ProteinMPNN', why:'Code + example scripts for sequence design'},
           {label:'ESM / ESMFold — official repo (Meta)', url:'https://github.com/facebookresearch/esm', why:'Fast structure prediction to validate your redesigns'}
@@ -368,30 +702,122 @@ const DATA = [
       'AlphaFold 3, Demystified — technical breakdown',
       'AI & De Novo Protein Design articles — practical guides to ESMFold2, RFdiffusion'
     ],
-    milestone: 'Successfully redesigned a protein sequence with ProteinMPNN and validated the resulting structure'
+    milestone: 'Successfully redesigned a protein sequence with ProteinMPNN and validated the resulting structure',
+    interviewPrep: [
+      {q:'Why does AlphaFold process MSA and pair representations jointly instead of separately, and what does Triangle Attention enforce geometrically?', p:'high'},
+      {q:'What is the difference between pLDDT and PAE, and why is high pLDDT not sufficient evidence of a correct structure?', p:'high'},
+      {q:'How does RFdiffusion adapt a general DDPM framework to generate valid 3D protein backbones instead of images?', p:'med'},
+      {q:'Why is inverse folding (ProteinMPNN) a fundamentally different problem than forward structure prediction?', p:'high'},
+      {q:'What\'s the practical failure mode of AlphaFold on a protein with no good MSA — an orphan protein or a de novo design?', p:'high'},
+      {q:'If a designed protein has high ProteinMPNN confidence but fails experimentally, what\'s your first hypothesis?', p:'med'}
+    ]
+  },
+  {
+    id: 9, accent: 'var(--ngs)', isNGS: true, unitLabel: 'Module', title: 'Sequencing Data Wrangling & R/Bioconductor',
+    tagline: 'The wet-lab-to-dataframe pipeline every later chapter quietly assumes you already know.',
+    whyRead: 'A pure-Python GenAI background has a specific blind spot here: almost every real translational genomics group, CRO, and pharma biostatistics team still runs its differential-expression and variant-calling work in R/Bioconductor, not PyTorch. If you can\'t open a BAM or VCF without looking up the spec, or don\'t know why DESeq2 output looks the way it does, that gap surfaces immediately in a computational biology interview — and it undermines the multi-omics work in the next two chapters, which assume you already know what a count matrix and a variant call actually are before a foundation model ever touches them.',
+    keyTheme: 'VCF/BAM format literacy and DESeq2\'s normalization logic — the fastest way an interviewer can tell a Python-only ML background from someone who has actually handled sequencing data.',
+    weeks: [
+      {n:1, focus:'NGS File Formats & CLI Tools', detail:'The raw formats every downstream tool assumes you can already read: FASTQ, SAM/BAM, and VCF',
+        subtopics:[
+          {t:'FASTQ quality scores', h:1.5, d:'The 4-line record and that Phred scores are log-scaled error probabilities (Q30 ≈ 1 error in 1000). Enough to reason about why low-quality tails get trimmed.', s:'Historical encoding offsets (Phred+33 vs +64) beyond knowing the ambiguity once existed.'},
+          {t:'SAM/BAM alignment records', h:3, d:'Be able to read a record and explain the key fields: FLAG (paired/reverse/secondary), POS, MAPQ, and the CIGAR string. Know BAM is just compressed binary SAM, that it is coordinate-sorted and indexed for random access, and what MAPQ 0 means (multi-mapping — the read could sit in several places, which quietly wrecks repetitive-region analyses).', s:'Every FLAG bit and the full optional-tag registry. Look them up; know the ones above cold.'},
+          {t:'VCF variant records', h:3, d:'Highest-priority item this week. Walk a row field by field: CHROM/POS/REF/ALT, then the INFO vs. FORMAT split (site-level vs. per-sample), and the GT genotype field (0/0, 0/1, 1/1). Know that indel representation is not canonical, hence left-alignment/normalization — the kind of detail that signals real hands-on experience.', s:'Structural-variant VCF conventions and gVCF specifics unless a target role is variant-calling-heavy.'},
+          {t:'samtools / bcftools', h:2.5, d:'Hands-on and genuinely useful: view, sort, index, flagstat, and region queries on a real BAM; bcftools view/query/filter on a VCF. Aim to inspect files confidently without reaching for documentation.', s:'Memorizing the full flag surface of either tool.'},
+          {t:'Read QC (FastQC)', h:1.5, d:'Run it once on real data and learn to read the report: per-base quality decay, adapter contamination, duplication, GC anomalies. The transferable idea is that QC failures upstream masquerade as biological signal downstream.', s:'Every FastQC module in detail, and building your own QC tooling.'}
+        ],
+        links:[
+          {label:'samtools — official documentation', url:'https://www.htslib.org/doc/samtools.html', why:'The standard CLI for inspecting and manipulating BAM/SAM files'},
+          {label:'VCF specification (samtools/hts-specs)', url:'https://samtools.github.io/hts-specs/VCFv4.3.pdf', why:'The authoritative field-by-field VCF format spec'}
+        ]},
+      {n:2, focus:'R & Bioconductor Fundamentals', detail:'Enough R to be dangerous, plus the Bioconductor object model that most genomics packages are built on',
+        subtopics:[
+          {t:'R syntax for a Python developer', h:3, d:'Target reading fluency, not mastery. Learn the specific things that will bite you: 1-based indexing, vectors/data.frames, the `<-` assignment idiom, factors (and why they cause silent bugs), NA semantics, and `[` vs `[[` vs `$`. You need to read and adapt other people\'s R, not write idiomatic R from scratch.', s:'S4/R5 class systems, metaprogramming, and writing R packages. Deliberately out of scope.'},
+          {t:'tidyverse basics (dplyr, ggplot2)', h:3, d:'dplyr verbs (filter/select/mutate/group_by/summarise) map almost 1:1 onto pandas, so this is fast. Invest the time in ggplot2 instead — the grammar-of-graphics model is genuinely different from matplotlib and it is how you will produce the volcano/PCA plots that scientific audiences expect.', s:'purrr functional programming and advanced tidyeval.'},
+          {t:'Bioconductor package ecosystem', h:2, d:'Orientation: understand that Bioconductor is a separate, release-versioned ecosystem installed via BiocManager (not plain CRAN/install.packages), and that its packages share common data structures by design. Critically, learn to use vignettes — they are the real documentation and are far better than most Python equivalents.', s:'Package-submission and build-system mechanics.'},
+          {t:'SummarizedExperiment & GRanges objects', h:3, d:'The conceptual key to the whole ecosystem, so do not skim it: SummarizedExperiment bundles the assay matrix + per-sample colData + per-feature rowData in one object, which is why samples and metadata cannot silently desynchronize the way a bare pandas DataFrame plus a separate sample sheet can. GRanges represents genomic intervals with fast overlap operations. Build one of each by hand.', s:'The full class hierarchy and every accessor method.'}
+        ],
+        links:[
+          {label:'Bioconductor — official site', url:'https://bioconductor.org/', why:'Package ecosystem, install instructions, and vignettes'},
+          {label:'SummarizedExperiment — vignette', url:'https://bioconductor.org/packages/release/bioc/vignettes/SummarizedExperiment/inst/doc/SummarizedExperiment.html', why:'The core data structure most Bioconductor genomics packages build on'}
+        ]},
+      {n:3, focus:'RNA-seq Differential Expression', detail:'From raw counts to a defensible list of differentially expressed genes',
+        subtopics:[
+          {t:'Alignment-free quantification (Salmon/kallisto)', h:2, d:'Concept plus one run: these skip base-level alignment and assign reads to transcripts by k-mer compatibility, which is dramatically faster. Know that output is estimated counts (fractional, because multi-mapping reads are probabilistically assigned) and that this is why you import via tximport rather than reading a plain matrix.', s:'The selective-alignment/pseudoalignment algorithm internals.'},
+          {t:'Raw counts vs. CPM/TPM vs. DESeq2-normalized counts', h:3, d:'Do not skim — this is the highest-signal item of the module. DESeq2 and edgeR require RAW integer counts, because their negative-binomial model needs the true count variance; feeding them TPM or CPM is a classic, silently wrong mistake. TPM/CPM are for visualization and within-sample comparison. Know why library size and composition bias both need correcting, and roughly what DESeq2\'s median-of-ratios size factors do.', s:'Hand-deriving size factors. Know what the normalization corrects for and what breaks without it.'},
+          {t:'DESeq2 / limma-voom', h:4, d:'Working depth — this is the module project. Understand the design formula (~ condition + batch), why counts are modelled as negative binomial rather than normal (overdispersion), what dispersion shrinkage buys you with few replicates, and why log2 fold changes get shrunk. Read the results table properly, especially the difference between raw p-value, adjusted p-value, and independent filtering. Know limma-voom as the faster alternative for larger n.', s:'Full GLM theory and the internals of the shrinkage estimators.'},
+          {t:'Batch correction (ComBat)', h:2, d:'The essential distinction: for DE testing you normally include batch as a covariate in the model rather than pre-correcting the data; explicit correction (ComBat/removeBatchEffect) is mainly for visualization and clustering. And know the hard limit — if batch is perfectly confounded with your biological condition, no method can rescue it. That last point is a strong interview answer.', s:'The empirical Bayes derivation behind ComBat.'}
+        ],
+        links:[
+          {label:'DESeq2 — official vignette', url:'https://bioconductor.org/packages/release/bioc/vignettes/DESeq2/inst/doc/DESeq2.html', why:'Canonical walkthrough of the DESeq2 normalization + testing workflow'},
+          {label:'Salmon — official documentation', url:'https://salmon.readthedocs.io/', why:'Fast, alignment-free transcript quantification feeding into DESeq2/limma'}
+        ]},
+      {n:4, focus:'Variant Calling Basics + Project', detail:'How a VCF row gets made, and what annotation adds on top of it',
+        subtopics:[
+          {t:'Short-variant calling concepts (GATK)', h:3, d:'Conceptual pipeline shape, not tool mastery: align → mark duplicates → (base recalibration) → call variants → filter. Know why a caller emits genotype likelihoods rather than hard calls, that coverage depth drives confidence, and the difference between germline (expect 0/0, 0/1, 1/1) and somatic calling (tumour vs. normal, arbitrary allele fractions, needs a matched normal).', s:'Running full GATK best practices end to end — it is slow, resource-heavy, and low-yield for your goals. Understand the stages and what each fixes.'},
+          {t:'Variant annotation (VEP/ANNOVAR)', h:2.5, d:'What annotation adds on top of a bare position: gene/transcript context, predicted consequence (missense, nonsense, frameshift, synonymous), population allele frequency (gnomAD), and pathogenicity predictions. Know that consequence depends on which transcript you pick — a real and commonly overlooked source of disagreement.', s:'Every annotation source and plugin. Run VEP once on a small VCF and read the output.'},
+          {t:'Connecting a VCF to the GWAS work in the Statistical Genetics module', h:2, d:'Deliberate bridge, worth the time: see explicitly how per-sample VCF genotypes become the genotype matrix a GWAS regresses phenotype against, and where PLINK formats (bed/bim/fam) fit. Also note where the Genomic FM chapter\'s variant-effect predictors slot in — they score the same variants a caller produced.', s:'PLINK\'s full command surface; you only need the data-model mapping.'}
+        ],
+        links:[
+          {label:'GATK — official documentation', url:'https://gatk.broadinstitute.org/hc/en-us', why:'The de facto standard germline/somatic variant-calling toolkit'},
+          {label:'Ensembl VEP — official documentation', url:'https://www.ensembl.org/info/docs/tools/vep/index.html', why:'Standard variant annotation tool referenced throughout clinical genomics'}
+        ]}
+    ],
+    project: 'Take a public RNA-seq count matrix (e.g. a small GEO series) and run a full DESeq2 differential expression analysis in R — QC, normalization, DE testing, and a volcano plot. Then load a small VCF with a Bioconductor package and write two sentences on what a Python-only pipeline would have missed by skipping the file-format layer.',
+    readings: [
+      'Bioconductor documentation — package ecosystem and object model',
+      'DESeq2 vignette — normalization and differential expression testing',
+      'hts-specs (samtools/hts-specs) — the authoritative SAM/BAM/VCF format specifications'
+    ],
+    milestone: 'Can read a BAM or VCF with the correct command-line or Bioconductor tool without looking up the format, and has run one full DESeq2 differential-expression analysis end-to-end in R',
+    interviewPrep: [
+      {q:'Why is R/Bioconductor still the default in academic and translational genomics despite Python\'s dominance in ML?', p:'high'},
+      {q:'What\'s the difference between raw counts, CPM, TPM, and DESeq2\'s normalized counts — and why does feeding the wrong one into a DE test produce misleading results?', p:'high'},
+      {q:'What is a batch effect, concretely, and how does something like ComBat or limma\'s removeBatchEffect address it — what does it NOT fix?', p:'high'},
+      {q:'Walk through what a single VCF row actually represents, field by field.', p:'med'},
+      {q:'Why do RNA-seq aligners need to be splice-aware (e.g. STAR) instead of just using a DNA aligner like BWA?', p:'med'}
+    ]
   },
   {
     id: 3, accent: 'var(--m3)', title: 'Genomic Foundation Models & Multi-Omics',
     tagline: 'From single proteins to whole genomes and cellular state.',
+    whyRead: 'Protein-level models only get you so far — most of precision medicine and drug discovery ultimately traces back to DNA and RNA. This chapter teaches you to reason about scale, tokenization, and inductive bias in long-sequence models, a skill set that transfers directly to any genomic-scale or long-context modeling problem you\'ll be asked to reason about, on the job or in an interview.',
+    keyTheme: 'Why architecture (tokenization, equivariance) can beat raw scale — and how you\'d prove a claim like that isn\'t just a good story.',
     weeks: [
       {n:9, focus:'Tokenization', detail:'Why DNA models moved from k-mers to Byte Pair Encoding — avoiding information leakage, improving efficiency',
-        subtopics:['K-mer tokenization','Byte Pair Encoding (BPE) for DNA','Information leakage in genomic tokenizers'],
+        subtopics:[
+          {t:'K-mer tokenization', h:2, d:'What overlapping k-mers are and the specific defect they introduce: adjacent overlapping k-mers share k−1 bases, so a masked token is partly reconstructable from its neighbours — the model can cheat at pretraining and learn less than the loss curve suggests.', s:'Exhaustive k-mer-size benchmark tables across published DNA models.'},
+          {t:'Byte Pair Encoding (BPE) for DNA', h:2.5, d:'How BPE fixes the above with non-overlapping, frequency-derived variable-length tokens, and the resulting compression benefit — fewer tokens per base means longer effective context for the same compute. Know the tradeoff too: token boundaries no longer align to single bases, which complicates base-resolution tasks and single-nucleotide variant effects.', s:'Implementing BPE. You already understand it from NLP; focus on what is different for a 4-letter alphabet with no word boundaries.'},
+          {t:'Information leakage in genomic tokenizers', h:1.5, d:'Generalize the lesson, because it is the transferable one: any tokenization that lets a masked target be inferred from context inflates pretraining performance without improving the representation. Be ready to state this crisply — it demonstrates you evaluate architectures skeptically.', s:'Nothing to add; this is a short, high-value idea.'}
+        ],
         links:[
           {label:'Caduceus — project page & paper', url:'https://caduceus-dna.github.io/', why:'Discusses tokenization + architecture tradeoffs for DNA models'}
         ]},
       {n:10, focus:'Large-Scale GFMs', detail:'Evo 2 (1M-token context); AlphaGenome (base-pair-resolution functional tracks)',
-        subtopics:['Long-context genomic modeling','StripedHyena architecture','Base-pair-resolution functional prediction'],
+        subtopics:[
+          {t:'Long-context genomic modeling', h:3, d:'Why genomics needs context lengths NLP rarely does: regulatory elements (enhancers) act on promoters from tens or hundreds of kilobases away, so a short window physically cannot see the interacting element. Be able to give that concrete biological justification rather than "longer is better" — it is the crux of the standard question here.', s:'Every published long-context attention variant. The biological motivation is what differentiates you.'},
+          {t:'StripedHyena architecture', h:3, d:'Enough to explain the motivation: attention is quadratic, so million-token contexts interleave subquadratic convolutional/state-space operators with a few attention layers, keeping global reach at feasible cost. Know that the hybrid exists because pure SSMs lose some precise recall that attention provides.', s:'Hyena operator derivations and FFT-convolution implementation detail. Concept and tradeoff only.'},
+          {t:'Base-pair-resolution functional prediction', h:2.5, d:'The task framing: given sequence, predict functional tracks (expression, accessibility, splicing) at or near single-base resolution — a sequence-to-track regression problem, distinct from generative sequence modelling. Know why base resolution matters clinically: a single-nucleotide change can abolish a splice site.', s:'Full per-assay benchmark comparisons across published track-prediction models.'}
+        ],
         links:[
           {label:'Evo 2 — official repo (Arc Institute)', url:'https://github.com/ArcInstitute/evo2', why:'Local inference, generation, and variant-effect examples'},
           {label:'Evo 2 — Arc Institute overview', url:'https://arcinstitute.org/tools/evo', why:'Model description, benchmarks, and Evo Designer interface'}
         ]},
       {n:11, focus:'Inductive Bias', detail:'Caduceus — bi-directional, reverse-complement equivariant architecture outperforming 10x larger models',
-        subtopics:['Mamba / state-space models','BiMamba (bi-directionality)','Reverse-complement equivariance'],
+        subtopics:[
+          {t:'Mamba / state-space models', h:3, d:'Working conceptual grasp: a selective state-space model carries a compressed recurrent state and scales linearly in sequence length, versus attention\'s quadratic cost and unbounded per-token lookback. Know the tradeoff — linear cost and long reach, but a fixed-size state means lossy recall of distant specifics.', s:'The selective-scan derivation and hardware-aware kernel implementation.'},
+          {t:'BiMamba (bi-directionality)', h:2, d:'Why DNA demands bi-directionality where causal language modelling does not: a base is constrained by sequence on both sides, and there is no left-to-right "reading order" in a genome. Know the mechanism at a high level — run the SSM in both directions and combine.', s:'Parameter-sharing schemes between the two directional passes.'},
+          {t:'Reverse-complement equivariance', h:4, d:'The centrepiece of the week — go deep. A DNA duplex carries the same information read forward on one strand or reverse-complemented on the other, so the biology is genuinely symmetric under that operation. A model without the constraint must learn it twice from data; a model with it built in gets the symmetry for free, which is why a smaller equivariant model can beat a much larger non-equivariant one. Be able to distinguish invariance (same output) from equivariance (output transforms correspondingly), and connect it to Triangle Attention from Month 2 — same theme: encode known structure rather than hoping scale discovers it.', s:'Formal group-theory treatment of equivariant networks. The argument and the concrete DNA instance are what get discussed.'}
+        ],
         links:[
           {label:'Caduceus paper (arXiv)', url:'https://arxiv.org/abs/2403.03234', why:'Full architecture + benchmark details'}
         ]},
       {n:12, focus:'Multi-Omics + Project', detail:'scGPT, Geneformer; integrate a genomic foundation model into a small variant-classification task',
-        subtopics:['Single-cell foundation models','Variant-effect prediction','Baseline benchmarking (k-mer/logistic regression)'],
+        subtopics:[
+          {t:'Single-cell foundation models', h:3, d:'The key contrast to internalize: in a genomic FM the token is a piece of SEQUENCE; in scGPT/Geneformer the token is a GENE, and a "sentence" is one cell\'s expression profile — usually rank-ordered, so it is not sequence modelling at all. Know the standard tasks (cell-type annotation, batch integration, perturbation response) and the live criticism that these models sometimes fail to beat well-tuned classical baselines on held-out data.', s:'Per-model architecture minutiae. The token-definition contrast plus the healthy skepticism is the whole ask.'},
+          {t:'Variant-effect prediction', h:4, d:'Working depth — this is the project. The zero-shot trick: score a variant by the model\'s likelihood difference between reference and alternate sequence, on the logic that evolutionarily disfavoured changes are less likely under a genome-trained model. Learn the evaluation traps properly: severe class imbalance (pathogenic variants are rare), why AUROC alone flatters a model here (prefer AUPRC), and circularity risk when labels derive from databases the model may have effectively seen.', s:'Every published VEP benchmark. Do one task honestly instead.'},
+          {t:'Baseline benchmarking (k-mer/logistic regression)', h:3, d:'Non-negotiable and explicitly part of the milestone: build the dumb baseline FIRST — k-mer features into logistic regression, plus a conservation-only baseline. Being able to say "the foundation model beat a tuned k-mer baseline by X on AUPRC" is worth more in an interview than any amount of architecture talk, and occasionally the baseline wins, which is itself the most valuable possible finding.', s:'Nothing. Cutting this corner defeats the purpose of the chapter.'}
+        ],
         links:[
           {label:'Evo 2 — releases & usage examples', url:'https://github.com/ArcInstitute/evo2/releases', why:'Includes variant-effect prediction (TraitGym, BRCA1/2) examples to mirror'}
         ]}
@@ -401,61 +827,287 @@ const DATA = [
       'Genomic Foundation Models in 2026 — critical evaluation on held-out test sets; where scGPT/Geneformer struggle',
       'Bioinformatics Guides & Tutorials (Genomatics) — multi-omics integration, variant classification'
     ],
-    milestone: 'Genomic foundation model beats your own baseline on a held-out variant task'
+    milestone: 'Genomic foundation model beats your own baseline on a held-out variant task',
+    interviewPrep: [
+      {q:'Why did genomic foundation models move away from fixed k-mer tokenization toward BPE, and what problem does that solve?', p:'high'},
+      {q:'What does reverse-complement equivariance mean architecturally, and why does Caduceus baking it in outperform larger non-equivariant models?', p:'high'},
+      {q:'If a genomic foundation model beats your baseline on AUROC but not on calibration, what would you report and why does it matter?', p:'high'},
+      {q:'What is the practical difference between a genomic foundation model and a single-cell foundation model like scGPT — what is the "token" in each?', p:'med'},
+      {q:'Why does a 1M-token context matter specifically for genomics, compared to NLP where long context is also valuable?', p:'med'},
+      {q:'What\'s a concrete failure mode of applying a genomic foundation model pretrained on reference-genome data to a rare-variant prediction task?', p:'high'}
+    ]
+  },
+  {
+    id: 7, accent: 'var(--stats)', isStats: true, title: 'Statistical Genetics & Clinical Trial Foundations',
+    tagline: 'The biggest missing piece — GWAS-level genetics, rigorous hypothesis testing, and the clinical-trial vocabulary that makes biomarker work defensible.',
+    whyRead: 'This is the single most commonly underestimated gap for AI/ML engineers moving into biotech and pharma. You can build a technically excellent model and still fail an interview — or a real project — because you don\'t know what a multiple-testing correction, a prognostic biomarker, or MNAR missingness actually means in a clinical context. It also directly strengthens the variant-effect work you just finished in the Genomic FMs chapter, and sets up the clinical-trial-design content in the next chapter — skipping it is the most common reason technically strong candidates get filtered out of computational biology / clinical data science roles.',
+    topPriority: true,
+    keyTheme: 'Multiple-testing correction and the 4 biomarker types (predictive/prognostic/pharmacodynamic/diagnostic) — the fastest way to get screened out of a clinical data science role is fumbling these.',
+    unitLabel: 'Module',
+    weeks: [
+      {n:1, focus:'Population & Statistical Genetics', detail:'The genetics layer underneath biomarker discovery — variants, linkage, and how genotype gets connected to phenotype',
+        subtopics:[
+          {t:'SNPs & linkage disequilibrium (LD)', h:3, d:'LD is the concept that makes GWAS interpretable, so get it properly: nearby variants are inherited together, so the variant you detect is usually a correlated tag, NOT the causal one. This is exactly why a GWAS hit is a locus rather than an answer, and why fine-mapping exists. Know allele frequency, MAF, and roughly what r² means between two variants.', s:'Haplotype-phasing algorithms and population-genetics theory (drift, selection coefficients) beyond the intuition.'},
+          {t:'GWAS', h:4, d:'Full working depth — this is the module project. Know the design (regress phenotype on each variant with covariates), why the genome-wide significance threshold is ~5×10⁻⁸ (Bonferroni over ~1M independent tests), why principal components are included as covariates (population stratification is a genuine confounder that produces false hits), and how to read a Manhattan plot and a QQ plot. QQ-plot inflation as evidence of uncorrected confounding is a great thing to be able to explain.', s:'Mixed-model GWAS implementation internals (BOLT-LMM/SAIGE). Know they exist and why relatedness needs handling.'},
+        ],
+        links:[
+          {label:'GWAS Catalog (EMBL-EBI)', url:'https://www.ebi.ac.uk/gwas/', why:'Browse real GWAS summary statistics and study designs'}
+        ]},
+      {n:'1b', focus:'From Association to Mechanism', detail:'What a GWAS hit is actually good for — risk scores, molecular consequence, and causal claims',
+        subtopics:[
+          {t:'Polygenic risk scores', h:2.5, d:'The construction (weighted sum of risk alleles) and — more important for interviews — the limitations: PRS transfer poorly across ancestries because LD structure and allele frequencies differ, which is an active equity problem in the field. Know that PRS are population-level stratification tools, not individual diagnostics.', s:'PRS method comparisons (LDpred/PRS-CS internals) and per-trait predictive-accuracy tables.'},
+          {t:'eQTL / pQTL', h:2.5, d:'The bridge from a statistical hit to mechanism: an eQTL is a variant associated with a gene\'s expression level, a pQTL with protein abundance. This answers "what does my non-coding GWAS hit actually DO", and colocalization is how you argue a GWAS signal and an eQTL share a causal variant. Directly relevant to biomarker work in the next chapter.', s:'Colocalization method internals (coloc Bayesian framework); cis vs. trans distinction plus the concept is enough.'},
+          {t:'Mendelian randomization', h:3, d:'Worth real time because it is where causal thinking enters genetics: genotype is randomized at conception and fixed, so it works as a natural instrumental variable for lifelong exposure — letting you argue causation from observational data. Learn the three IV assumptions (relevance, independence, no horizontal pleiotropy) and that pleiotropy is the assumption that usually fails. Pairs directly with the causal-inference work in the Translational Biomarker chapter.', s:'The full estimator zoo (MR-Egger, weighted median). Know that sensitivity analyses exist to probe pleiotropy.'}
+        ],
+        links:[
+          {label:'GWAS Catalog (EMBL-EBI)', url:'https://www.ebi.ac.uk/gwas/', why:'Browse real GWAS summary statistics and study designs'}
+        ]},
+      {n:2, focus:'Statistical Rigor for Biomedical Data', detail:'The hypothesis-testing and regression machinery that keeps biomarker claims honest',
+        subtopics:[
+          {t:'Hypothesis testing & p-values', h:2.5, d:'Tighten the definition until it is exact, because sloppy phrasing here is a visible red flag to biostatisticians: a p-value is P(data this extreme | null true), NOT the probability the null is true and not an effect size. Know Type I/II error and that "not significant" is not evidence of no effect.', s:'Bayesian-vs-frequentist philosophy debates and the full menu of tests. Get the interpretation exactly right instead.'},
+          {t:'Multiple testing correction (Benjamini-Hochberg FDR)', h:3, d:'Highest-signal item in the module — know it cold. Bonferroni controls the family-wise error rate (probability of ANY false positive) and is conservative; Benjamini-Hochberg controls the false discovery rate (expected PROPORTION of false positives among your hits) and is more powerful, which is why genomics defaults to it. Be able to apply BH to a p-value list by hand and explain what q = 0.05 licenses you to claim. Also know why a discovery-stage screen and a confirmatory endpoint warrant different strictness.', s:'Permutation-based and hierarchical correction procedures unless a specific role demands them.'},
+        ],
+        links:[
+          {label:'statsmodels — official documentation', url:'https://www.statsmodels.org/stable/index.html', why:'Hypothesis testing and multiple-comparison tools in Python'}
+        ]},
+      {n:'2b', focus:'Regression, Confounding & Power', detail:'Fitting models to p ≫ n omics data without fooling yourself',
+        subtopics:[
+          {t:'Regularized regression (Lasso/Elastic Net)', h:2.5, d:'You know the mechanics; spend the time on the domain-specific reasons. Omics data is p ≫ n (20,000 genes, 200 patients) so unregularized fitting is hopeless, and features are highly correlated (co-expressed genes) — which is exactly why Lasso alone is unstable, arbitrarily picking one of several correlated genes, and why Elastic Net is preferred when you intend to interpret the selected features biologically.', s:'Coordinate-descent optimization detail.'},
+          {t:'Confounding & batch effects', h:3, d:'Go deep — this is the difference between a model and a defensible model. Know the definition of a confounder (associated with both exposure and outcome, not on the causal path), why adjusting for a collider or mediator instead makes things worse, and the practical clinical-omics reality that processing batch, site, and sample age routinely correlate with the outcome of interest. The killer point to be able to state: if batch is perfectly confounded with condition, the study is unsalvageable by analysis.', s:'Formal do-calculus — that arrives in the causal-inference week of the next chapter.'},
+          {t:'Statistical power & effect size', h:2, d:'The four interlocking quantities (n, effect size, alpha, power) and how to reason about the tradeoff. Two things matter most: underpowered studies produce exaggerated effect estimates when they do hit significance (winner\'s curse), and effect size is what clinicians actually care about, not the p-value. Know that a post-hoc power calculation on your own observed effect is not meaningful.', s:'Hand-deriving power for every test type; use a calculator or `statsmodels.stats.power`.'}
+        ],
+        links:[
+          {label:'statsmodels — official documentation', url:'https://www.statsmodels.org/stable/index.html', why:'Regression, hypothesis testing, and multiple-comparison tools in Python'}
+        ]},
+      {n:3, focus:'Clinical Trial Data Foundations', detail:'The vocabulary needed to talk to clinicians and biostatisticians without translation loss',
+        subtopics:[
+          {t:'Trial phases, randomization & control groups', h:2.5, d:'Vocabulary you must have to be credible in the room: Phase I (safety/dose, small, often healthy volunteers or refractory patients), II (efficacy signal, dose-finding), III (confirmatory, large, randomized), IV (post-marketing). Know WHY randomization works — it balances unmeasured confounders in expectation, which no statistical adjustment can replicate — plus blinding and intention-to-treat vs. per-protocol.', s:'Adaptive/basket/platform trial designs and regulatory submission mechanics unless a role explicitly needs them.'},
+          {t:'Efficacy vs. safety endpoints', h:2, d:'The distinction between primary and secondary endpoints and why the primary is pre-specified and fiercely protected (declaring a different endpoint after seeing data is p-hacking with a regulator watching). Know surrogate vs. clinical endpoints (tumour shrinkage vs. overall survival) and that a surrogate must be validated to be accepted — a recurring theme in biomarker work.', s:'Disease-specific endpoint criteria (e.g. full RECIST rules) unless you are targeting oncology specifically.'},
+          {t:'Predictive vs. prognostic vs. pharmacodynamic vs. diagnostic biomarkers', h:3, d:'Memorize these four cold with one example each — this is stated in the module\'s Definition of Done and is the single fastest way to get filtered out if fumbled. Predictive = forecasts response TO A TREATMENT (guides who to treat); prognostic = forecasts disease course REGARDLESS of treatment; pharmacodynamic = shows the drug is engaging its target (moves with dose); diagnostic = detects presence of disease. The critical consequence: only a PREDICTIVE biomarker justifies patient selection, and confusing it with prognostic is a genuinely expensive trial-design error.', s:'Nothing. This is the highest return-per-hour item in the entire roadmap.'},
+          {t:'Inclusion/exclusion criteria & baseline covariates', h:2, d:'Why these determine external validity — a model trained on a narrowly selected trial population may not generalize to real-world patients, which is a sharp answer to "what are your model\'s limitations". Know what baseline means (pre-treatment), why baseline imbalance matters in small trials, and the convention of pre-specifying covariate adjustment.', s:'CDISC/SDTM data-standard specifics unless a job description names them.'}
+        ],
+        links:[]},
+      {n:4, focus:'Longitudinal Data & Missing Data', detail:'Repeated-measures modeling and the missingness mechanisms that quietly bias clinical models',
+        subtopics:[
+          {t:'Mixed-effects models (random intercept/slope)', h:4, d:'Working depth, part of the project. The core problem: repeated measurements on one patient are correlated, so treating them as independent rows inflates your effective n and understates standard errors. A random intercept gives each patient their own baseline; a random slope also gives each patient their own trajectory over time. Be able to say which you need and why — that exact question is in this module\'s prep list. Fit one in statsmodels MixedLM.', s:'REML estimation theory and convergence-diagnostic internals.'},
+          {t:'Time × treatment interaction', h:2, d:'Why the interaction term IS the longitudinal treatment effect: the main effect of treatment gives a constant offset, but the question is almost always whether treated patients change differently OVER TIME — which is the interaction. Being fluent in reading interaction coefficients is disproportionately useful.', s:'Higher-order and three-way interaction interpretation.'},
+          {t:'MCAR / MAR / MNAR', h:3, d:'Know all three cold, they are directly examined. MCAR = missingness unrelated to anything (rare, benign). MAR = explainable by OBSERVED variables (imputation is valid here). MNAR = depends on the UNOBSERVED value itself, e.g. patients drop out because they got worse — and this is both the most common case in trials and the one where standard imputation is biased. Crucially, know that you cannot definitively distinguish MAR from MNAR from the data alone; it is a domain judgement, which is why sensitivity analysis is the honest answer.', s:'Formal missing-data likelihood theory. The mechanisms plus their practical consequences are the ask.'},
+          {t:'Multiple imputation (MICE)', h:3, d:'Why MULTIPLE and not single imputation: generating several completed datasets and pooling via Rubin\'s rules propagates imputation uncertainty into your standard errors, whereas mean-imputation fabricates false confidence and shrinks variance. Know that the imputation model should include the outcome, and that MICE assumes MAR — so pair it with a sensitivity analysis when you suspect MNAR.', s:'Rubin\'s rules derivation and congeniality theory.'}
+        ],
+        links:[
+          {label:'statsmodels — Linear Mixed Effects Models', url:'https://www.statsmodels.org/stable/mixed_linear.html', why:'MixedLM for random intercept/slope models on repeated-measures data'}
+        ]}
+    ],
+    project: 'Run a small GWAS-style association scan on a public summary-statistics dataset with proper multiple-testing correction, then simulate a longitudinal dataset with injected missingness and fit a mixed-effects model — documenting how the missingness mechanism (MCAR vs. MAR vs. MNAR) changes your conclusions.',
+    readings: [
+      'GWAS Catalog documentation — study design and summary statistics format',
+      'statsmodels documentation — regression, hypothesis testing, and MixedLM',
+      'Yao et al. (2025) — causal inference methods with multi-omics data (see Translational Biomarker chapter for full citation)'
+    ],
+    milestone: 'Can correctly apply an FDR correction to a multiple-testing scenario, explain the difference between predictive/prognostic/pharmacodynamic/diagnostic biomarkers from memory, and justify a missing-data handling choice using the correct MCAR/MAR/MNAR mechanism',
+    interviewPrep: [
+      {q:'Why do you need multiple-testing correction in a GWAS with a million SNPs, and how does Benjamini-Hochberg differ from a Bonferroni correction?', p:'high'},
+      {q:'What is the difference between a predictive, prognostic, pharmacodynamic, and diagnostic biomarker — give a one-line example of each.', p:'high'},
+      {q:'If data are MNAR, why can multiple imputation still be biased, and what would you do instead?', p:'high'},
+      {q:'What does a random slope add to a mixed-effects model that a random intercept alone cannot capture?', p:'med'},
+      {q:'What is confounding by indication, and why is it a specific, recurring problem in observational clinical biomarker studies?', p:'high'},
+      {q:'How would you handle a biomarker that\'s only measured post-baseline in patients who respond to treatment — informative missingness?', p:'high'}
+    ]
   },
   {
     id: 4, accent: 'var(--m4)', title: 'AI-Driven Drug Discovery & Workflow Engineering',
     tagline: 'Turn everything above into reproducible, production-grade pipelines.',
+    whyRead: 'A model that can\'t run reproducibly inside a real pipeline doesn\'t ship — full stop. This chapter is what turns a research result into something a pharma or biotech company could actually put into production, and questions about reproducibility, orchestration, and where AI genuinely helps in the drug discovery pipeline are near-universal in technical interviews for this field.',
+    keyTheme: 'Reproducibility discipline — the exact things you\'d log so a run can be repeated identically a year later.',
     weeks: [
       {n:13, focus:'Discovery Pipeline', detail:'Five stages: Target ID → Lead Generation → Preclinical → Clinical Trials → Regulatory Approval',
-        subtopics:['Target identification','Lead generation & optimization','Preclinical testing','Clinical trial design','Regulatory approval'],
+        subtopics:[
+          {t:'Target identification', h:2.5, d:'Where computational biology contributes most, so connect it to earlier chapters explicitly: genetic evidence (GWAS/MR from the Statistical Genetics module) is the strongest predictor of eventual clinical success, which is precisely why pharma invests in human genetics. Know what "target validation" and "druggability" mean.', s:'Specific target-discovery platform vendors and disease-area specifics.'},
+          {t:'Lead generation & optimization', h:2.5, d:'The shape of the process: hit finding (HTS, virtual screening, fragment-based) → hit-to-lead → lead optimization against a multi-objective profile. The key insight is that optimization is inherently multi-objective — potency, selectivity, solubility, metabolic stability, and toxicity trade against each other, so a model that only maximizes predicted potency is useless in practice.', s:'Medicinal-chemistry synthesis routes and SAR tables.'},
+          {t:'Preclinical testing', h:1.5, d:'Awareness: in vitro → animal models → toxicology/PK before human dosing, and that poor PK and unexpected toxicity are major attrition causes. Enough to know what an ADMET model is trying to pre-empt.', s:'Regulatory tox study designs and species-selection rationale.'},
+          {t:'Clinical trial design', h:1.5, d:'Light pass only — you covered this properly in the Statistical Genetics module, so just situate it in the pipeline here and move on. Note where a predictive biomarker enables an enrichment design.', s:'Everything already covered; do not re-read it.'},
+          {t:'Regulatory approval', h:1.5, d:'Orientation only: what an IND and an NDA/BLA are, and that a companion diagnostic must be approved alongside a drug when patient selection depends on a biomarker. That last link is the one worth remembering — it is why biomarker rigor has regulatory teeth.', s:'Submission document structure and agency procedural detail.'}
+        ],
         links:[
           {label:'Coursera — Bioinformatics Specialization (UC San Diego)', url:'https://www.coursera.org/specializations/bioinformatics', why:'Later modules touch translational/pipeline concepts'}
         ]},
-      {n:14, focus:'Agentic Drug Discovery', detail:'DO Challenge benchmark — autonomous chemical-space exploration under limited labeling budgets (100k labels / 1M structures)',
-        subtopics:['Agentic exploration of chemical space','Active learning under label budgets','Benchmark design for AI agents'],
+      {n:'14a', focus:'Molecular Representations', detail:'How small molecules become model inputs — the missing link between "drug discovery" and anything you can actually train on',
+        subtopics:[
+          {t:'SMILES / SELFIES / InChI', h:2.5, d:'SMILES as the standard text encoding, plus the two facts that matter for modelling: SMILES are non-unique (many strings, one molecule — hence canonicalization, and hence SMILES enumeration as data augmentation), and a generative model emitting raw SMILES can produce syntactically invalid strings, which is exactly the problem SELFIES solves by being valid-by-construction. Parse a few by hand in RDKit.', s:'The full SMILES grammar, stereochemistry notation edge cases, and InChI key structure beyond knowing it is a canonical identifier.'},
+          {t:'Molecular fingerprints (ECFP/Morgan)', h:2.5, d:'How circular fingerprints hash substructures within a radius into a bit vector, and why these remain a shockingly strong baseline — fingerprints plus gradient boosting still beats many deep models on small datasets, which is your Core Principle #1 in the chemistry domain. Know what radius and bit length control, and that hash collisions exist.', s:'The full fingerprint taxonomy (MACCS, atom pairs, pharmacophore). Know ECFP/Morgan properly, the rest by name.'},
+          {t:'Molecular graphs & GNNs', h:3, d:'The natural representation — atoms as nodes, bonds as edges — and why it beats strings in principle (permutation invariance, no arbitrary linearization). Reuse the GNN understanding from Month 2\'s ProteinMPNN work. Know the honest limitation: plain message passing struggles to distinguish some structures and does not natively encode 3D conformation, which matters because activity depends on shape.', s:'Benchmarking GNN variants against each other. Understand the representation tradeoff, not the leaderboard.'},
+        ],
+        links:[
+          {label:'RDKit — official documentation', url:'https://www.rdkit.org/docs/', why:'The standard cheminformatics toolkit: SMILES parsing, fingerprints, descriptors'}
+        ]},
+      {n:'14b', focus:'Property Prediction, Docking & Honest Splits', detail:'Predicting what kills candidates, and the split discipline that stops you fooling yourself',
+        subtopics:[
+          {t:'ADMET / property prediction', h:2.5, d:'Absorption, Distribution, Metabolism, Excretion, Toxicity — the properties that kill more candidates than weak potency does. Practically: these are small, noisy, often imbalanced datasets where assay variability sets a real ceiling on achievable accuracy. Knowing that experimental noise bounds your metrics is a mature point to raise.', s:'Individual endpoint assay protocols and pharmacokinetic compartment modelling.'},
+          {t:'Docking & virtual screening basics', h:3, d:'What docking does (pose search plus a scoring function estimating binding affinity) and — most importantly — why scores are weakly correlated with real affinity: rigid-receptor approximations, poor solvation/entropy treatment, and scoring functions fit to limited data. So docking is a triage filter, not evidence of binding. Connect to Month 2: AF3 predicts complexes, which is a related but distinct capability.', s:'Running large-scale screening campaigns and comparing docking programs. One hands-on run is plenty.'},
+          {t:'Scaffold splits vs. random splits', h:2.5, d:'Do not skip — this is the interview question of the week. A random split leaks: analogues of the same chemical series land in both train and test, so the model interpolates within a scaffold it has memorized and reports inflated accuracy. A scaffold split forces generalization to unseen chemistry, which is what prospective use actually demands, and scores drop substantially. Same conceptual family as reporting held-out performance honestly elsewhere in the roadmap.', s:'Every alternative splitting strategy; know scaffold and time-based splits and why they exist.'}
+        ],
+        links:[
+          {label:'RDKit — official documentation', url:'https://www.rdkit.org/docs/', why:'The standard cheminformatics toolkit: SMILES parsing, fingerprints, descriptors'},
+          {label:'DeepChem — official documentation', url:'https://deepchem.readthedocs.io/', why:'Molecular ML datasets, featurizers, and scaffold-split utilities'},
+          {label:'MoleculeNet benchmark', url:'https://moleculenet.org/', why:'Standard molecular property prediction benchmarks and their splits'}
+        ]},
+      {n:'14c', focus:'Agentic Drug Discovery', detail:'DO Challenge benchmark — autonomous chemical-space exploration under limited labeling budgets (100k labels / 1M structures)',
+        subtopics:[
+          {t:'Agentic exploration of chemical space', h:2.5, d:'Frame it as sequential decision-making under a hard budget rather than "an LLM does chemistry": the space is combinatorially vast (10⁶⁰ drug-like molecules), so the question is which few compounds to evaluate next. Know the exploration/exploitation framing.', s:'Specific agent-framework implementations; they churn fast and the framing is what persists.'},
+          {t:'Active learning under label budgets', h:3, d:'The genuinely transferable skill here, and it maps directly onto real lab constraints — each label is a physical experiment costing money and weeks. Learn the standard acquisition strategies (uncertainty sampling, expected improvement, diversity-aware batch selection) and why batch selection needs diversity: the top-k most promising compounds are often near-identical, so you spend your whole budget on one idea.', s:'Bayesian-optimization theory in depth and GP kernel design.'},
+          {t:'Benchmark design for AI agents', h:2, d:'Why the budget cap is the point — it simulates the real constraint and makes results comparable, and without it an agent just brute-forces the library. Generalize to a reusable habit: ask what a benchmark structurally prevents an agent from doing, and whether a scoring function can be gamed instead of satisfied.', s:'Leaderboard results, which will be stale by the time you interview.'}
+        ],
         links:[]},
       {n:15, focus:'Workflow Orchestration', detail:'Nextflow or Snakemake for reproducible pipelines across HPC/cloud',
-        subtopics:['Nextflow DSL2 basics','Snakemake rules & wildcards','Containers (Docker/Singularity) for reproducibility','HPC/cloud executors'],
+        subtopics:[
+          {t:'Nextflow DSL2 basics', h:4, d:'Working depth — pick Nextflow OR Snakemake as your primary and go deep on one rather than half-learning both. Nextflow: processes, channels, and dataflow composition; understand that it is dataflow-driven (a process fires when its inputs arrive) which is why it parallelizes naturally, plus `-resume` and the work directory model. Read one nf-core pipeline properly.', s:'Groovy language depth and writing custom plugins/operators.'},
+          {t:'Snakemake rules & wildcards', h:2, d:'If Nextflow is your primary, learn Snakemake at reading level only — enough to explain the contrast in an interview: Snakemake is pull-based/Make-like (declare desired output files, it works backwards resolving wildcards) versus Nextflow\'s push-based dataflow. Python-native, so it is often more comfortable coming from your background.', s:'Deep Snakemake features (checkpoints, complex remote providers) unless you choose it as primary.'},
+          {t:'Containers (Docker/Singularity) for reproducibility', h:3, d:'The genuinely load-bearing piece of reproducibility, and the part people skimp on. Learn to pin image digests rather than `:latest` (the single most common reproducibility failure), why Singularity/Apptainer dominates on HPC (rootless execution on shared clusters), and how a workflow engine attaches a container per process so different stages can use conflicting dependency versions.', s:'Multi-stage build optimization and container-registry administration.'},
+          {t:'HPC/cloud executors', h:2, d:'The key architectural idea: the same pipeline definition runs locally, on Slurm, or on AWS Batch by changing an executor config — the portability claim that makes these engines worth using. Ties directly into the Cloud parallel track. Know what a work directory and staging mean when storage is remote.', s:'Cluster administration and scheduler tuning; you are a consumer of these systems.'}
+        ],
         links:[
           {label:'Nextflow — official documentation', url:'https://www.nextflow.io/docs/latest/index.html', why:'Canonical getting-started + reference docs'},
           {label:'nf-core', url:'https://nf-co.re/', why:'Community-curated, production-grade Nextflow pipelines to study'},
           {label:'Snakemake — official documentation', url:'https://snakemake.readthedocs.io/', why:'Canonical getting-started + reference docs'}
         ]},
       {n:16, focus:'Capstone', detail:'Build an end-to-end pipeline combining a prior month\'s model with orchestration tooling',
-        subtopics:['Environment version-locking (conda/containers)','Pipeline testing & reproducibility'],
+        subtopics:[
+          {t:'Environment version-locking (conda/containers)', h:3, d:'Practice, not theory: pin everything — package versions, container digests, model weights version, and reference genome build. That last one is a classic silent killer, since coordinates differ between GRCh37 and GRCh38 and mixing them produces plausible-looking nonsense. Verify by rebuilding from the lockfile on a clean machine.', s:'Comparing every environment-management tool. Pick conda-lock or containers and be rigorous with it.'},
+          {t:'Pipeline testing & reproducibility', h:4, d:'The part that distinguishes a portfolio project from a script: ship a tiny test dataset that runs in minutes, assert on expected outputs rather than just exit codes, and handle a failure case deliberately (what happens on a malformed input?). Then do the real test — run it from a clean clone and see whether it works. Be able to answer "what would someone need to reproduce this exactly a year from now" concretely.', s:'CI/CD platform depth; a single working GitHub Actions job invoking the test profile is sufficient.'}
+        ],
         links:[]}
     ],
     project: 'Build a small Nextflow/Snakemake pipeline that takes raw sequence input, runs a structure or variant-effect model from Month 2/3, and outputs a ranked candidate list. Version-lock the environment.',
     readings: [
       'Artificial Intelligence in Drug Discovery and Development — traditional vs. AI-driven comparison',
       'Can AI Agents Design and Implement Drug Discovery Pipelines? — the Deep Thought agentic system and benchmarks',
+      'RDKit documentation — molecular representations, fingerprints, and descriptors',
+      'MoleculeNet — why scaffold splits matter for honest molecular property benchmarks',
       'How to Install Nextflow with Conda — environment setup'
     ],
-    milestone: 'Capstone pipeline runs end-to-end and is reproducible from a clean environment'
+    milestone: 'Capstone pipeline runs end-to-end and is reproducible from a clean environment',
+    interviewPrep: [
+      {q:'Where in the five-stage drug discovery pipeline does AI currently provide the most reliable uplift, and where is it still weakest?', p:'med'},
+      {q:'What is the difference between a Nextflow process and a Snakemake rule at a conceptual level, and when would you pick one over the other?', p:'med'},
+      {q:'Why does the DO Challenge cap the labeling budget instead of giving agents the full dataset — what real-world constraint does that simulate?', p:'med'},
+      {q:'What specific pieces of information does a reproducible pipeline run need to log to be re-run identically a year later?', p:'high'},
+      {q:'How would you validate that an agentic system exploring chemical space isn\'t just exploiting an artifact in the scoring function?', p:'high'},
+      {q:'Why is a random train/test split misleading for molecular property prediction, and what does a scaffold split fix?', p:'high'},
+      {q:'What are the tradeoffs between representing a molecule as a SMILES string vs. a fingerprint vs. a graph?', p:'high'},
+      {q:'Why is a good docking score weak evidence that a compound will actually bind in vitro?', p:'med'}
+    ]
+  },
+  {
+    id: 6, accent: 'var(--amgen)', isIndustry: true, unitLabel: 'Module', title: 'Translational Biomarker Science & Clinical AI',
+    tagline: 'Built for roles like a computational biology / precision-medicine data scientist — biomarker modeling, multi-omic integration, and regulated AI on clinical trial data.',
+    whyRead: 'This chapter is a direct match to real job descriptions in the field — multi-omic integration, predictive/prognostic biomarker modeling, and causal inference are explicit, named responsibilities in postings like a computational biology data scientist role at a company like Amgen. If your goal is a role like that, this is arguably the single most important chapter in the entire roadmap, and the one most worth over-preparing for.',
+    topPriority: true,
+    keyTheme: 'Highest-weight chapter for roles like this — causal inference rigor (DoWhy\'s 4 steps) and predictive-vs-prognostic reasoning come up in nearly every technical round.',
+    weeks: [
+      {n:1, focus:'Multi-Omic Integration Frameworks', detail:'Jointly model genomics, transcriptomics, proteomics, epigenomics, imaging, and clinical covariates',
+        subtopics:[
+          {t:'MOFA / MOFA+ (latent-factor integration)', h:4, d:'Working depth — this is the module project. MOFA is essentially unsupervised factor analysis across multiple data modalities: it learns latent factors explaining shared and modality-specific variation, giving you variance-explained-per-view (so you can say WHICH omic layer drives a factor) and sparse weights you can inspect for biology. Know that it handles missing modalities for some samples — very common in real trials — and that factors are unsupervised, so they need not relate to your outcome at all.', s:'The variational-inference derivation. Run it, interpret factors, know its assumptions.'},
+          {t:'Matrix & tensor factorization', h:2.5, d:'Conceptual grounding for the above: shared latent structure via joint decomposition, and where a tensor formulation fits (a third mode such as time or dose). Your ML background carries most of this; focus on the interpretability angle that makes factorization preferred over black boxes here.', s:'Decomposition algorithm variants and convergence proofs.'},
+          {t:'Graph-based multi-omic integration', h:2.5, d:'The alternative paradigm: similarity-network fusion or GNNs over patient-similarity or pathway graphs, letting you inject prior biological knowledge (known pathways, PPI networks) as structure. Know the tradeoff versus factor models — potentially richer, but harder to interpret and more sensitive to graph construction choices.', s:'Specific published method implementations. Know the family and when you would reach for it.'},
+          {t:'Imaging + omics + clinical covariate fusion', h:3, d:'The practical multimodal problems, which is where most real difficulty lives: wildly different dimensionalities (millions of imaging pixels vs. 20 clinical variables) mean naive concatenation lets one modality dominate. Learn early vs. late vs. intermediate fusion, and the crucial evaluation discipline — always check whether the multimodal model actually beats the best SINGLE modality, because surprisingly often it does not, and clinical covariates alone are a strong baseline people skip.', s:'Specific imaging architectures unless the target role is imaging-heavy.'}
+        ],
+        links:[
+          {label:'MOFA2 — official repo (bioFAM)', url:'https://github.com/bioFAM/MOFA2', why:'Reference implementation of factor-model multi-omic integration'},
+          {label:'mofapy2 — Python implementation', url:'https://github.com/bioFAM/mofapy2', why:'Python-side MOFA training if you\'re not working in R'}
+        ]},
+      {n:2, focus:'Predictive & Prognostic Biomarker Modeling', detail:'Model response, resistance, disease stratification, and adverse-event endpoints from trial data',
+        subtopics:[
+          {t:'Response/resistance biomarker discovery', h:3.5, d:'The central workflow of the role. Reinforce the predictive-vs-prognostic distinction operationally: a predictive biomarker shows up as a biomarker × TREATMENT INTERACTION, which is why you need a control arm to establish one at all — an observation that immediately signals you understand trial design. Know that acquired resistance is a longitudinal problem needing on-treatment samples, not just baseline.', s:'Disease-specific resistance mechanism catalogues unless targeting a specific therapeutic area.'},
+          {t:'Disease stratification models', h:2.5, d:'Unsupervised subtype discovery (clustering patients on molecular profiles) and the discipline it demands: cluster stability and validation in an independent cohort, because clustering ALWAYS returns clusters. Know that a subtype is only useful if it is reproducible and actionable — it must change what you would do.', s:'Every clustering algorithm; consensus clustering plus honest stability assessment is enough.'},
+          {t:'Adverse-event & safety endpoint modeling', h:2.5, d:'Often neglected by candidates, which makes it a differentiator. Safety modelling differs structurally from efficacy: events are rare (severe class imbalance), the cost asymmetry is stark (a missed toxicity is far worse than a false alarm), and events are time-varying. Know that regulators scrutinize safety analyses more heavily, so interpretability is not optional here.', s:'MedDRA coding hierarchies and regulatory safety reporting workflows.'},
+          {t:'Patient selection strategy design', h:2.5, d:'Where modelling meets business consequence: an enrichment design raises the chance of showing effect but shrinks the eligible market and requires a validated companion diagnostic. Learn the threshold problem — turning a continuous biomarker score into a yes/no treat decision requires choosing a cutoff, and that choice is a clinical and commercial judgement, not a maximize-AUC exercise. Excellent material for a design-discussion round.', s:'Health-economics modelling and market-access detail.'}
+        ],
+        links:[
+          {label:'lifelines — survival analysis in Python', url:'https://lifelines.readthedocs.io/', why:'Core library for time-to-event endpoints used throughout biomarker modeling'}
+        ]},
+      {n:3, focus:'Advanced Clinical & Causal Statistics', detail:'The statistical machinery clinical development actually runs on, plus moving from association to defensible causal claims',
+        subtopics:[
+          {t:'Survival analysis (Cox, competing risks)', h:5, d:'Budget the most time here — it is the statistical backbone of clinical development and the most likely deep-dive topic in a technical round. Understand censoring (a patient alive at study end is information, not a missing value, and dropping them biases everything), Kaplan-Meier, the log-rank test, and Cox proportional hazards. Know how to interpret a hazard ratio, that the proportional-hazards ASSUMPTION is testable and often violated (crossing survival curves — common with immunotherapies), and what competing risks are (dying of something else prevents the event you are modelling, so naive KM overestimates incidence). Also know C-index vs. calibration.', s:'Parametric AFT model families and frailty models unless a role calls for them.'},
+          {t:'Longitudinal & mixed-effects models', h:2, d:'Light pass — you covered this in the Statistical Genetics module. Use the time to connect it here: joint modelling of a longitudinal biomarker together with a time-to-event outcome, and why a biomarker measured over time is more informative than baseline alone.', s:'Joint-model estimation machinery; know the concept and that the tooling exists.'},
+        ],
+        links:[
+          {label:'lifelines — Cox & survival regression', url:'https://lifelines.readthedocs.io/en/latest/Survival%20Analysis%20intro.html', why:'Hands-on intro to censoring, hazard, and survival estimation'}
+        ]},
+      {n:'3b', focus:'Causal Inference for Clinical Claims', detail:'Moving from association to a claim you would defend to a regulator',
+        subtopics:[
+          {t:'Missing data & imputation strategies', h:2, d:'Light pass, also already covered — reinforce with the clinical specifics: informative dropout is MNAR and pervasive in trials, and the standard defence is a pre-specified sensitivity analysis under different assumptions rather than one imputation you hope is right.', s:'Re-reading the mechanism definitions; go straight to the trial-specific implications.'},
+          {t:'Confounder adjustment, propensity scores, and causal inference', h:5, d:'Co-highest priority with survival analysis, and the explicit keyTheme of this chapter. Learn the DoWhy 4-step workflow properly — model (encode assumptions as a DAG), identify (does the data permit the estimand at all), estimate, refute (sensitivity/refutation tests) — and understand that the REFUTE step is the whole point: it probes whether conclusions survive violated assumptions. Know propensity scores (matching/weighting to emulate randomization on OBSERVED covariates only), that unmeasured confounding remains the fundamental limit, and confounding by indication (sicker patients get the aggressive treatment, so naive analysis makes the treatment look harmful). Be able to state plainly what would have to be true before recommending a retrospective finding for prospective use.', s:'Full do-calculus proofs and the complete estimator taxonomy. Assumptions, DAG reasoning, and refutation discipline are what get probed.'}
+        ],
+        links:[
+          {label:'lifelines — Cox & survival regression', url:'https://lifelines.readthedocs.io/en/latest/Survival%20Analysis%20intro.html', why:'Hands-on intro to censoring, hazard, and survival estimation'},
+          {label:'DoWhy — causal inference library', url:'https://github.com/py-why/dowhy', why:'Explicit causal-assumption modeling: DAGs, identification, and refutation tests'}
+        ]},
+      {n:4, focus:'Regulated AI Systems: LLMs, Generative Models & Agentic AI', detail:'Foundation-model and agentic approaches for scientific workflows, built to hold up under regulatory scrutiny',
+        subtopics:[
+          {t:'LLM-based scientific workflow assistants', h:2.5, d:'Your existing strength — spend the time on the domain constraints rather than the technology. What changes in a regulated scientific setting: hallucination is unacceptable when output informs patient-affecting decisions, so retrieval grounding with citations, human-in-the-loop review, and audit trails are requirements rather than nice-to-haves. Know which tasks are genuinely safe to automate (literature triage, document drafting, code generation) versus which are not.', s:'Framework tutorials for tools you already know.'},
+          {t:'Generative models for representation learning & hypothesis generation', h:2.5, d:'Position generative models honestly for this domain: valuable for representation learning and for proposing hypotheses, but a generated hypothesis is a candidate for experimental testing, not a finding. Know why hypothesis generation is cheap and validation is expensive, which is what makes ranking and prioritization the actual valuable output.', s:'Re-covering generative architectures you already know well.'},
+          {t:'Agentic AI (assistive, automated, sentinel) system design', h:3, d:'Learn the escalating autonomy tiers and — more importantly — how to argue about where the human stays in the loop as a function of consequence. A sentinel/monitoring agent flagging anomalies for review is deployable today; an agent autonomously changing a trial-affecting decision is not. Being able to reason about appropriate autonomy per risk level is a genuinely senior-sounding skill and rare among candidates.', s:'Specific agent frameworks; the risk-tiering argument is the durable part.'},
+          {t:'Model validation, interpretability & reproducibility in regulated (GxP) environments', h:4, d:'The highest-value item of the week because most ML candidates have zero exposure to it. Learn what validation MEANS in a GxP context (documented evidence that the system does what it is specified to do — not just a good test-set score), plus audit trails, change control, and why "the model was retrained and now behaves differently" is a compliance event rather than a routine update. Distinguish global from local interpretability and know that SHAP on a multi-omic model needs care because correlated features split attribution. Connect to the AI Engineering track: versioning and lineage are what make this feasible.', s:'Reciting regulation numbers (21 CFR Part 11 etc.) — know that a formal framework exists and what it demands operationally.'}
+        ],
+        links:[]}
+    ],
+    project: 'Take a public clinical/multi-omic dataset (e.g. TCGA or a public trial biomarker set), integrate 2+ omic layers with MOFA2, then build a prognostic model (survival or response endpoint) with an explicit baseline, a causal-adjustment step (propensity or DAG-based), and a short interpretability + limitations write-up as if presenting to biostatisticians and clinicians.',
+    readings: [
+      'MOFA+ paper (Argelaguet et al.) — statistical framework for multi-modal integration',
+      'DoWhy documentation — the 4-step causal inference workflow (model, identify, estimate, refute)',
+      'lifelines documentation — survival analysis fundamentals for time-to-event endpoints'
+    ],
+    milestone: 'A biomarker model on real multi-omic + clinical data beats a defined baseline, includes an explicit causal-adjustment step, and is documented well enough for a non-ML scientific audience',
+    interviewPrep: [
+      {q:'What is the difference between a predictive and a prognostic biomarker, in one sentence each — and why does mixing them up matter for trial design?', p:'high'},
+      {q:'Why can MOFA-style latent factors be more interpretable than a black-box multimodal neural net for biomarker discovery, and what do you give up?', p:'high'},
+      {q:'Walk through the four steps of DoWhy\'s causal workflow and explain what a refutation test is actually checking.', p:'high'},
+      {q:'If your survival model has a great C-index but poor calibration, what does that tell a clinician — and would you still ship it?', p:'high'},
+      {q:'You find a biomarker significantly associated with response in a retrospective analysis — what has to be true before you\'d recommend it for prospective patient selection?', p:'high'},
+      {q:'How would you explain a complex multi-omic model\'s prediction to a clinician who doesn\'t trust black boxes?', p:'high'}
+    ]
   },
   {
     id: 5, accent: 'var(--m5)', isCapstone: true, title: 'Capstone Project',
     tagline: 'Ship one real, reproducible, end-to-end pipeline.',
+    whyRead: 'Everything before this chapter is practice; the capstone is proof. Interviewers and hiring managers weight one real, documented, end-to-end project far more heavily than a long list of completed tutorials — this is the thing you\'ll actually talk through, link to, and defend under follow-up questions, so it deserves more care than any single module that came before it.',
+    keyTheme: 'Your "walk me through a project" answer — for most technical-round interviews, this project literally IS the interview.',
     weeks: [
       {n:17, focus:'Scope the Pipeline', detail:'Pick your target model and sketch the DAG before writing any orchestration code',
-        subtopics:['Problem scoping','Choosing input model (structure, inverse folding, or variant-effect)','DAG / stage design','Input & output format spec'],
+        subtopics:[
+          {t:'Problem scoping', h:3, d:'The highest-leverage hours of the whole capstone, and the ones people skip. Write down, before any code: who the user is, what decision the output supports, and what "good" means quantitatively. Deliberately scope SMALLER than feels impressive — a narrow pipeline that runs reliably beats an ambitious one that half-works, and interviewers probe depth, not surface area.', s:'Nothing. Under-scoping here is the most common reason capstones never finish.'},
+          {t:'Choosing input model (structure, inverse folding, or variant-effect)', h:2, d:'Pick based on what you can defend under follow-up questions, not what sounds most impressive. Prefer the model whose failure modes and confidence metrics you genuinely understand — you will be asked "when does this break", and a confident answer about a simple model beats a vague one about a fancier model.', s:'Trying multiple models to decide. Choose in an afternoon and commit.'},
+          {t:'DAG / stage design', h:3, d:'Sketch the stage graph on paper first, with explicit inputs/outputs per stage. The design principle worth articulating: split at points where you would want to inspect intermediate output, resume after failure, or swap an implementation — that reasoning is exactly what the "why did you split it that way" interview question is testing.', s:'Formal workflow-modelling notation; a clear hand-drawn diagram in your README is better.'},
+          {t:'Input & output format spec', h:2, d:'Write the contract down before building: exact input format with a concrete example, exact output schema, and how errors and empty results are represented. Prefer standard formats (FASTA/VCF/TSV) over bespoke ones so your pipeline composes with real tooling — and know that "ranked candidate list" needs a defined score with a stated meaning.', s:'Formal schema languages; a documented example plus a validation check is proportionate.'}
+        ],
         links:[
           {label:'nf-core pipelines (browse for scoping examples)', url:'https://nf-co.re/', why:'See how real pipelines break work into stages'}
         ]},
       {n:18, focus:'Build & Wire the Stages', detail:'Implement ingestion → model inference → ranking/output as Nextflow processes or Snakemake rules',
-        subtopics:['Process/rule definitions','Channel or wildcard wiring','Containerizing each stage (Docker/Singularity)'],
+        subtopics:[
+          {t:'Process/rule definitions', h:5, d:'The main build effort. Keep each process single-purpose with declared inputs/outputs and no hidden side effects, and get one stage fully working end to end before adding the next — debugging a five-stage pipeline you wrote all at once is miserable. Resist putting real logic in the workflow language; keep it in scripts the workflow calls, so it stays testable.', s:'Advanced engine features. Plain, boring, readable process definitions are the goal.'},
+          {t:'Channel or wildcard wiring', h:3, d:'Where most Nextflow/Snakemake debugging time actually goes, so expect friction. Nextflow: channel cardinality (one item vs. many, and how operators reshape them) is the usual source of confusing behaviour. Snakemake: wildcard resolution and ambiguous rules. Print/inspect intermediate channels rather than guessing.', s:'The full operator reference; learn the handful you need.'},
+          {t:'Containerizing each stage (Docker/Singularity)', h:4, d:'Do this per-stage rather than one fat image — it is the payoff of the whole approach, letting an R/Bioconductor stage and a PyTorch stage coexist without dependency conflict. Pin digests, keep images minimal, and verify the container works standalone before wiring it in. Budget generously: GPU-enabled containers in particular tend to consume more time than expected.', s:'Image-size micro-optimization and multi-arch builds.'}
+        ],
         links:[
           {label:'Nextflow — official documentation', url:'https://www.nextflow.io/docs/latest/index.html', why:'Process, channel, and container syntax reference'},
           {label:'Snakemake — official documentation', url:'https://snakemake.readthedocs.io/', why:'Rule, wildcard, and container syntax reference'}
         ]},
       {n:19, focus:'Reproducibility & Testing', detail:'Version-lock the environment and confirm the pipeline runs clean on a fresh machine or container',
-        subtopics:['Conda/container lock files','Clean-environment test run','Edge-case & failure handling'],
+        subtopics:[
+          {t:'Conda/container lock files', h:3, d:'Pin the full stack — packages, container digests, model weights, and reference data version. State the reference build (GRCh37 vs GRCh38) explicitly in your README, since silently mixing builds is a classic way to produce confident nonsense.', s:'Comparing lock tooling. Pick one and be thorough.'},
+          {t:'Clean-environment test run', h:4, d:'The actual test of whether you built something real: fresh clone, fresh environment, ideally a different machine, and follow your own README literally without using memory to fill gaps. Every step you had to improvise is a documentation bug. This is also precisely the "could someone else run this" interview question, answered empirically.', s:'Nothing. Skipping this is how a capstone that "works" fails in front of an interviewer.'},
+          {t:'Edge-case & failure handling', h:3, d:'Decide and implement deliberate behaviour for: malformed input, an empty result set, and a failing model stage. Fail loudly with a useful message rather than silently emitting an empty file — silent failure is the single most common defect in research pipelines, and being able to discuss it thoughtfully signals engineering maturity.', s:'Exhaustive input fuzzing; handle the three realistic cases well.'}
+        ],
         links:[
           {label:'nf-core — pipeline testing conventions', url:'https://nf-co.re/', why:'Reference for how production pipelines structure tests'}
         ]},
       {n:20, focus:'Document & Ship', detail:'Write usage docs, include an example run, and publish the repo',
-        subtopics:['README & usage docs','Example dataset + expected output','Publishing (GitHub) & version tagging'],
+        subtopics:[
+          {t:'README & usage docs', h:4, d:'Write it for a hiring manager who has 5 minutes: what biological question it answers, an architecture diagram, exact run command, expected runtime and cost, and a short "design decisions and known limitations" section. That last section is the highest-value paragraph in the whole repo — stating what you chose not to do and why is the clearest available signal of judgement.', s:'Auto-generated API docs for a pipeline nobody imports as a library.'},
+          {t:'Example dataset + expected output', h:3, d:'Ship a small subsampled input (a few thousand reads, or one chromosome) plus the exact expected output so anyone can validate in minutes rather than hours. Check licensing before committing data — use openly redistributable sources, and never commit real patient data. If the file is large, script the download instead of committing it.', s:'Full-scale demo data. Small and runnable beats complete.'},
+          {t:'Publishing (GitHub) & version tagging', h:2, d:'Tag a v1.0.0, add a license, and write the summary you would actually say out loud in an interview — problem, approach, result, and what you would do next with more time. Then link it from your CV and LinkedIn, since an unlinked repo does no work for you.', s:'CI matrices, badges, and release automation for a solo project.'}
+        ],
         links:[]}
     ],
     project: 'Deploy the full capstone: a Nextflow or Snakemake pipeline that ingests raw sequence data, runs a model from Month 2 or 3 (structure prediction, inverse folding, or variant-effect scoring), and outputs a ranked, documented candidate list — reproducible from a clean environment.',
@@ -463,8 +1115,15 @@ const DATA = [
       'Nextflow / Snakemake official docs — orchestration reference (see Month 4, Week 15)',
       'nf-core pipeline conventions — how production-grade bioinformatics pipelines are structured and tested'
     ],
-    milestone: 'Pipeline runs end-to-end on a clean machine or container and produces documented, ranked output — ready to demo'
-  }
+    milestone: 'Pipeline runs end-to-end on a clean machine or container and produces documented, ranked output — ready to demo',
+    interviewPrep: [
+      {q:'Walk me through your pipeline end to end — what happens at each stage, and why did you split it that way?', p:'high'},
+      {q:'What would break first if this pipeline received 100x the input data, and how would you fix it?', p:'med'},
+      {q:'What did you baseline against, and what would convince you the model stage wasn\'t actually adding value?', p:'high'},
+      {q:'What are the concrete limitations of your pipeline, and what would you build next to address them?', p:'high'},
+      {q:'If you had to hand this pipeline off to someone else tomorrow, what\'s missing that would block them?', p:'med'}
+    ]
+  },
 ];
 
 const STORAGE_KEY = 'bioinfo-tracker-v1';
@@ -483,20 +1142,68 @@ function allTaskIds(){
   return ids;
 }
 
+// This file runs in two places: as a Claude artifact (where window.storage exists) and as a
+// plain file:// page opened from disk (where it does not, but localStorage does). Detect which
+// backend is actually usable rather than assuming, because a silent save failure turns the
+// tracker into a page that forgets everything on reload.
+const BACKEND = (function(){
+  try{
+    if(window.storage && typeof window.storage.get === 'function') return 'artifact';
+  }catch(e){ /* fall through */ }
+  try{
+    const probe = '__probe_bioinfo__';
+    localStorage.setItem(probe, '1');
+    localStorage.removeItem(probe);
+    return 'local';
+  }catch(e){
+    return 'none';   // private mode, or storage blocked for file:// URLs
+  }
+})();
+
+let saveBroken = false;
+
+function reportStorage(){
+  const note = document.getElementById('saveNote');
+  if(!note) return;
+  if(saveBroken || BACKEND === 'none'){
+    note.textContent = '⚠ progress cannot be saved in this browser — ticks will be lost on reload';
+    note.style.color = 'var(--m4)';
+  }else if(BACKEND === 'local'){
+    note.textContent = 'progress saves automatically — stored in this browser (localStorage)';
+  }else{
+    note.textContent = 'progress saves automatically as you check items off';
+  }
+}
+
 async function loadState(){
   try{
-    const res = await window.storage.get(STORAGE_KEY, false);
-    state = res && res.value ? JSON.parse(res.value) : {};
+    if(BACKEND === 'artifact'){
+      const res = await window.storage.get(STORAGE_KEY, false);
+      state = res && res.value ? JSON.parse(res.value) : {};
+    }else if(BACKEND === 'local'){
+      const raw = localStorage.getItem(STORAGE_KEY);
+      state = raw ? JSON.parse(raw) : {};
+    }else{
+      state = {};
+    }
   }catch(e){
+    console.error('load failed', e);
     state = {};
   }
 }
 
 async function saveState(){
+  if(BACKEND === 'none'){ saveBroken = true; reportStorage(); return; }
   try{
-    await window.storage.set(STORAGE_KEY, JSON.stringify(state), false);
+    if(BACKEND === 'artifact'){
+      await window.storage.set(STORAGE_KEY, JSON.stringify(state), false);
+    }else{
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    }
   }catch(e){
     console.error('save failed', e);
+    saveBroken = true;      // e.g. quota exceeded — say so instead of failing quietly
+    reportStorage();
   }
 }
 
@@ -507,6 +1214,22 @@ function monthTaskIds(m){
   ids.push(taskId(m.id,'project',0));
   ids.push(taskId(m.id,'milestone',0));
   return ids;
+}
+
+function renderPriorityMap(){
+  const list = document.getElementById('priorityList');
+  if(!list) return;
+  list.innerHTML = DATA.map(m=>{
+    const label = m.isCapstone ? 'Capstone' : (m.isCloud ? m.title : (m.isParallel ? 'AI Engineering' : (m.isIndustry ? m.title : (m.isStats ? m.title : (m.isNGS ? m.title : `Month ${m.id} · ${m.title}`)))));
+    return `
+    <div class="priority-row${m.topPriority ? ' top' : ''}">
+      <div class="priority-dot" style="background:${m.accent}"></div>
+      <div class="priority-row-text">
+        <div class="priority-row-name">${label}${m.topPriority ? '<span class="top-tag">Top priority</span>' : ''}</div>
+        <div class="priority-row-theme">${m.keyTheme || ''}</div>
+      </div>
+    </div>`;
+  }).join('');
 }
 
 function renderKaryo(){
@@ -547,10 +1270,49 @@ function rowHTML(id, title, detail, tag){
     </div>`;
 }
 
+function subtopicHTML(s){
+  // legacy string form — render as a plain chip-style row with no depth guidance
+  if(typeof s === 'string'){
+    return `<div class="depth-row"><div class="depth-head"><span class="depth-topic">${s}</span></div></div>`;
+  }
+  return `
+    <div class="depth-row">
+      <div class="depth-head">
+        <span class="depth-topic">${s.t}</span>
+        ${s.h ? `<span class="depth-hours">~${s.h}h</span>` : ''}
+      </div>
+      ${s.d ? `<div class="depth-learn"><span class="lbl">Learn</span>${s.d}</div>` : ''}
+      ${s.s ? `<div class="depth-skip"><span class="lbl">Skip</span>${s.s}</div>` : ''}
+    </div>`;
+}
+
+// Derived from the per-topic estimates rather than hardcoded, so the header cannot drift
+// out of sync when a week is split or a topic is re-scoped.
+function monthHours(m){
+  return (m.weeks||[]).reduce((sum,w)=> sum + weekHours(w), 0);
+}
+
+function weekHours(w){
+  return (w.subtopics||[]).reduce((sum,s)=> sum + (typeof s === 'object' && s.h ? s.h : 0), 0);
+}
+
 function weekBlockHTML(m, w, i){
   const id = taskId(m.id, 'week', i);
   const unit = m.unitLabel || 'Wk';
-  const chips = (w.subtopics||[]).map(s=>`<span class="subtopic-chip">${s}</span>`).join('');
+  const hrs = weekHours(w);
+  const depthRows = (w.subtopics||[]).map(subtopicHTML).join('');
+  const nTopics = (w.subtopics||[]).length;
+  // Collapsed by default: the summary keeps hours + topic count visible so an open month
+  // stays scannable, and the depth prose only costs vertical space when asked for.
+  const chips = depthRows ? `
+    <details class="depth">
+      <summary class="depth-total">
+        <span class="caret">▶</span>
+        <span>Scope &amp; depth${hrs ? ` · <b>≈${hrs}h</b> reading + hands-on` : ''}</span>
+        <span class="count">${nTopics} topic${nTopics===1?'':'s'}</span>
+      </summary>
+      <div class="depth-list">${depthRows}</div>
+    </details>` : '';
   const links = (w.links||[]).filter(l=>l.url).map(l=>`
       <li>
         <svg class="ext-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
@@ -566,7 +1328,7 @@ function weekBlockHTML(m, w, i){
   return `
     <div class="week-block">
       ${rowHTML(id, w.focus, w.detail, `${unit} ${w.n}`)}
-      ${chips ? `<div class="subtopics">${chips}</div>` : ''}
+      ${chips}
       ${studyBlock}
     </div>
   `;
@@ -581,23 +1343,29 @@ function renderMonths(){
     const projectId = taskId(m.id,'project',0);
     const milestoneId = taskId(m.id,'milestone',0);
 
-    const numLabel = m.isCapstone ? '★' : (m.isParallel ? '⚙' : String(m.id).padStart(2,'0'));
-    const chapterLabel = m.isCapstone ? `Final Chapter · ${m.tagline}` : (m.isParallel ? `Parallel Track · ${m.tagline}` : `Month ${m.id} · ${m.tagline}`);
-    const badge = m.isCapstone ? '<span class="capstone-badge">Capstone</span>' : (m.isParallel ? '<span class="parallel-badge">Ongoing</span>' : '');
+    const numLabel = m.isCapstone ? '★' : (m.isCloud ? '☁' : (m.isParallel ? '⚙' : (m.isIndustry ? '⬡' : (m.isStats ? '∑' : (m.isNGS ? '⛓' : String(m.id).padStart(2,'0'))))));
+    const chapterLabel = m.isCapstone ? `Final Chapter · ${m.tagline}` : (m.isCloud ? `Parallel Track · ${m.tagline}` : (m.isParallel ? `Parallel Track · ${m.tagline}` : (m.isIndustry ? `Industry-Aligned · ${m.tagline}` : (m.isStats ? `Foundations · ${m.tagline}` : (m.isNGS ? `Foundations · ${m.tagline}` : `Month ${m.id} · ${m.tagline}`)))));
+    const badge = m.isCapstone ? '<span class="capstone-badge">Capstone</span>' : (m.isCloud ? '<span class="cloud-badge">Cloud &amp; Networking</span>' : (m.isParallel ? '<span class="parallel-badge">Ongoing</span>' : (m.isIndustry ? '<span class="industry-badge">Role-Aligned</span>' : (m.isStats ? '<span class="stats-badge">Core Stats</span>' : (m.isNGS ? '<span class="ngs-badge">Wet-Lab Data</span>' : '')))));
 
     return `
-    <div class="month${m.isCapstone ? ' capstone' : ''}${m.isParallel ? ' parallel' : ''}" data-month="${m.id}" style="--accent:${m.accent}">
+    <div class="month${m.isCapstone ? ' capstone' : ''}${m.isParallel ? ' parallel' : ''}${m.isIndustry ? ' industry' : ''}${m.isStats ? ' stats' : ''}${m.isCloud ? ' cloud' : ''}${m.isNGS ? ' ngs' : ''}" data-month="${m.id}" style="--accent:${m.accent}">
       <div class="month-head">
         <div class="month-num">${numLabel}</div>
         <div class="month-titles">
           <div class="label">${chapterLabel}</div>
           <div class="name">${m.title}${badge}</div>
         </div>
+        <div class="month-hours">${monthHours(m)}h · ${m.weeks.length} ${(m.unitLabel || 'wk').toLowerCase()}${m.weeks.length===1?'':'s'}</div>
         <div class="month-progress">${prog.done}/${prog.total}</div>
         <svg class="chevron" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M6 3l6 5-6 5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </div>
       <div class="month-body">
         <div class="month-body-inner">
+          ${m.whyRead ? `
+          <div class="why-read">
+            <span class="k">Why this chapter matters</span>
+            <p>${m.whyRead}</p>
+          </div>` : ''}
           <div class="section-label">Weekly Focus</div>
           ${weekRows}
           <div class="section-label">Project</div>
@@ -611,15 +1379,24 @@ function renderMonths(){
           </div>
           <div class="section-label">Reading</div>
           ${readingRows}
-          <div class="section-label">Milestone</div>
+          <div class="section-label">Definition of Done</div>
           <div class="milestone-card">
-            <span class="k">You're done with this month when</span>
+            <span class="k">You're done with this chapter when</span>
             <p>${m.milestone}</p>
           </div>
           <div class="row${state[milestoneId] ? ' checked' : ''}" data-id="${milestoneId}">
             <div class="box"><svg viewBox="0 0 16 16" fill="none"><path d="M2 8l4 4 8-8" stroke="#0A1412" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-            <div class="row-text"><div class="row-title">Mark milestone reached</div></div>
+            <div class="row-text"><div class="row-title">Mark Definition of Done reached</div></div>
           </div>
+          ${(m.interviewPrep && m.interviewPrep.length) ? `
+          <div class="section-label">Interview Prep</div>
+          <div class="interview-card">
+            <span class="k">Be able to answer these cold</span>
+            <div class="interview-legend"><span class="signal-badge" style="position:static;">Frequently asked</span> = highest-signal, prioritize these first</div>
+            <ul class="interview-list">
+              ${[...m.interviewPrep].sort((a,b)=> (a.p==='high'?0:1) - (b.p==='high'?0:1)).map(item=>`<li>${item.p==='high' ? '<span class="signal-badge">Frequently asked</span>' : ''}${item.q}</li>`).join('')}
+            </ul>
+          </div>` : ''}
         </div>
       </div>
     </div>`;
@@ -632,6 +1409,15 @@ function renderMonths(){
   if(el) openMonth(el);
 
   attachHandlers();
+}
+
+// The accordion animates via an explicit max-height, so anything that changes the height of
+// an open month's content (a depth block expanding, a row being checked) must resync it or
+// the content gets clipped.
+function syncBodyHeight(monthEl){
+  if(!monthEl || !monthEl.classList.contains('open')) return;
+  const body = monthEl.querySelector('.month-body');
+  if(body) body.style.maxHeight = body.scrollHeight + 'px';
 }
 
 function openMonth(el){
@@ -664,11 +1450,13 @@ function attachHandlers(){
       refreshMonthHeaderCount(row.closest('.month'));
       await saveState();
       // keep expanded height correct after class change
-      const body = row.closest('.month-body');
-      if(body && row.closest('.month').classList.contains('open')){
-        body.style.maxHeight = body.scrollHeight + 'px';
-      }
+      syncBodyHeight(row.closest('.month'));
     });
+  });
+
+  // `toggle` does not bubble, so bind per-<details>
+  document.querySelectorAll('details.depth').forEach(d=>{
+    d.addEventListener('toggle', ()=> syncBodyHeight(d.closest('.month')));
   });
 }
 
@@ -688,11 +1476,11 @@ document.getElementById('resetBtn').addEventListener('click', async ()=>{
 });
 
 (async function init(){
-  const note = document.getElementById('saveNote');
   await loadState();
   renderKaryo();
   renderMonths();
-  note.textContent = 'progress saves automatically as you check items off';
+  renderPriorityMap();
+  reportStorage();
 })();
 </script>
 </body>
